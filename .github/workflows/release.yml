@@ -1,0 +1,142 @@
+name: Release
+
+# v* 태그 push 시 자동 빌드/릴리즈
+# 예: git tag v0.4.0 && git push origin v0.4.0
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  # ────────────────────────────────────────────
+  # Windows 빌드 (x64 NSIS 인스톨러 + 포터블)
+  # ────────────────────────────────────────────
+  build-win:
+    name: Build / Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build & Package (Windows)
+        run: npm run build:win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 코드 사이닝 (선택 — GitHub Secrets에 등록 시 활성화)
+          # CSC_LINK:         ${{ secrets.WIN_CSC_LINK }}
+          # CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-win
+          path: release/*.exe
+
+  # ────────────────────────────────────────────
+  # macOS 빌드 (DMG + pkg, arm64 + x64)
+  # ────────────────────────────────────────────
+  build-mac:
+    name: Build / macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build & Package (macOS)
+        run: npm run build:mac
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 코드 사이닝 + 노터리제이션 (선택 — GitHub Secrets에 등록 시 활성화)
+          # CSC_LINK:                      ${{ secrets.MAC_CSC_LINK }}
+          # CSC_KEY_PASSWORD:              ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          # APPLE_ID:                      ${{ secrets.APPLE_ID }}
+          # APPLE_APP_SPECIFIC_PASSWORD:   ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          # APPLE_TEAM_ID:                 ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-mac
+          path: |
+            release/*.dmg
+            release/*.pkg
+
+  # ────────────────────────────────────────────
+  # Linux 빌드 (AppImage + deb)
+  # ────────────────────────────────────────────
+  build-linux:
+    name: Build / Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Linux build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm fakeroot dpkg
+
+      - name: Build & Package (Linux)
+        run: npm run build:linux
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux
+          path: |
+            release/*.AppImage
+            release/*.deb
+
+  # ────────────────────────────────────────────
+  # GitHub Release 생성 + 파일 첨부
+  # ────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    needs: [build-win, build-mac, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "MCP Store ${{ github.ref_name }}"
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: true
+          files: release-artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

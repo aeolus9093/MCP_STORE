@@ -1,0 +1,3399 @@
+[
+  {
+    "id": "github-official",
+    "name": "GitHub",
+    "description": "GitHub API integration for repository management, issues, pull requests, and code search.",
+    "plainDescription": "AI가 내 GitHub 저장소를 읽고, 이슈를 만들고, PR을 올릴 수 있어요. 코드 리뷰나 버그 정리를 AI와 함께 할 수 있습니다.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-github",
+    "requiredEnvVars": [
+      {
+        "name": "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "description": "GitHub → Settings → Developer settings → Personal access tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 4200,
+    "lastUpdated": "2025-12-01",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/github",
+    "usageExamples": [
+      "내 GitHub 저장소 목록 보여줘",
+      "오픈 이슈 목록 요약해줘",
+      "main 브랜치에 PR 만들어줘",
+      "최근 커밋 10개 분석해줘"
+    ],
+    "permissions": [
+      "저장소 읽기/쓰기",
+      "이슈 생성 및 수정",
+      "PR 생성 및 리뷰",
+      "코드 검색"
+    ]
+  },
+  {
+    "id": "filesystem-official",
+    "name": "Filesystem",
+    "description": "Secure file system access for reading, writing, and managing local files.",
+    "plainDescription": "AI가 내 컴퓨터 파일을 읽고 쓸 수 있어요. 특정 폴더만 허용하므로 안전하게 사용할 수 있습니다.",
+    "category": "file",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-filesystem",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 3800,
+    "lastUpdated": "2025-11-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "usageExamples": [
+      "Desktop 폴더의 파일 목록 보여줘",
+      "이 텍스트 파일 내용 읽어줘",
+      "새 파일 만들어줘"
+    ],
+    "permissions": [
+      "지정된 폴더 내 파일 읽기/쓰기",
+      "디렉토리 탐색"
+    ]
+  },
+  {
+    "id": "slack-official",
+    "name": "Slack",
+    "description": "Slack integration for reading channels, messages, and sending notifications.",
+    "plainDescription": "AI가 슬랙 채널을 읽고 메시지를 요약하거나 보낼 수 있어요. 팀 커뮤니케이션을 AI로 정리하고 싶을 때 유용합니다.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-slack",
+    "requiredEnvVars": [
+      {
+        "name": "SLACK_BOT_TOKEN",
+        "description": "Slack App 설정 → OAuth & Permissions에서 Bot User OAuth Token을 복사하세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "SLACK_TEAM_ID",
+        "description": "슬랙 워크스페이스 URL의 첫 번째 경로 부분입니다 (예: T12345678).",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 2100,
+    "lastUpdated": "2025-10-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/slack",
+    "usageExamples": [
+      "#general 채널 오늘 메시지 요약해줘",
+      "팀에게 배포 완료 알림 보내줘"
+    ],
+    "permissions": [
+      "채널 메시지 읽기",
+      "메시지 전송",
+      "채널 목록 조회"
+    ]
+  },
+  {
+    "id": "notion-official",
+    "name": "Notion",
+    "description": "Notion workspace integration for reading and writing pages and databases.",
+    "plainDescription": "AI가 내 Notion 페이지를 읽고 새 내용을 추가할 수 있어요. 회의록 작성, 데이터베이스 정리 등을 자동화할 수 있습니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-notion",
+    "requiredEnvVars": [
+      {
+        "name": "NOTION_API_TOKEN",
+        "description": "Notion → Settings → Connections → Develop or manage integrations에서 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1900,
+    "lastUpdated": "2025-11-01",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/notion",
+    "usageExamples": [
+      "오늘 회의록 Notion에 작성해줘",
+      "프로젝트 데이터베이스에서 완료된 항목 보여줘"
+    ],
+    "permissions": [
+      "페이지 읽기/쓰기",
+      "데이터베이스 쿼리",
+      "블록 생성"
+    ]
+  },
+  {
+    "id": "brave-search",
+    "name": "Brave Search",
+    "description": "Web search using Brave Search API with privacy-focused results.",
+    "plainDescription": "AI가 인터넷 검색을 할 수 있어요. 최신 정보나 뉴스를 AI에게 물어볼 때 사용됩니다.",
+    "category": "search",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-brave-search",
+    "requiredEnvVars": [
+      {
+        "name": "BRAVE_API_KEY",
+        "description": "brave.com/search/api 에서 무료로 발급 가능합니다 (월 2,000회 무료).",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 2800,
+    "lastUpdated": "2025-12-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search",
+    "usageExamples": [
+      "오늘 AI 관련 최신 뉴스 검색해줘",
+      "파이썬 3.12 주요 변경사항 찾아줘"
+    ],
+    "permissions": [
+      "인터넷 웹 검색"
+    ]
+  },
+  {
+    "id": "puppeteer-official",
+    "name": "Puppeteer",
+    "description": "Browser automation for web scraping, screenshots, and interaction.",
+    "plainDescription": "AI가 웹사이트를 열고 클릭하거나 스크린샷을 찍을 수 있어요. 웹 자동화 작업에 활용할 수 있습니다.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-puppeteer",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 3100,
+    "lastUpdated": "2025-11-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer",
+    "usageExamples": [
+      "이 URL 스크린샷 찍어줘",
+      "웹사이트 특정 버튼 클릭해줘"
+    ],
+    "permissions": [
+      "브라우저 실행",
+      "웹페이지 접근 및 조작",
+      "스크린샷 캡처"
+    ]
+  },
+  {
+    "id": "sqlite-official",
+    "name": "SQLite",
+    "description": "SQLite database integration for querying and managing local databases.",
+    "plainDescription": "AI가 SQLite 데이터베이스 파일을 읽고 쿼리를 실행할 수 있어요. 데이터 분석이나 조회 작업에 유용합니다.",
+    "category": "database",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-sqlite",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1500,
+    "lastUpdated": "2025-10-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite",
+    "usageExamples": [
+      "users 테이블 스키마 보여줘",
+      "지난 7일간 주문 건수 쿼리해줘"
+    ],
+    "permissions": [
+      "SQLite 파일 읽기",
+      "SQL 쿼리 실행"
+    ]
+  },
+  {
+    "id": "postgres-official",
+    "name": "PostgreSQL",
+    "description": "PostgreSQL database read access with schema inspection.",
+    "plainDescription": "AI가 PostgreSQL 데이터베이스에 연결하여 테이블을 조회할 수 있어요. 데이터 분석 작업을 빠르게 처리할 수 있습니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-postgres",
+    "requiredEnvVars": [
+      {
+        "name": "POSTGRES_URL",
+        "description": "PostgreSQL 연결 문자열입니다. 예: postgresql://user:password@localhost:5432/dbname",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1800,
+    "lastUpdated": "2025-11-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres",
+    "usageExamples": [
+      "모든 테이블 목록과 스키마 보여줘",
+      "최근 1주일 신규 가입자 수 알려줘"
+    ],
+    "permissions": [
+      "PostgreSQL 데이터베이스 읽기 전용 접근"
+    ]
+  },
+  {
+    "id": "sequential-thinking",
+    "name": "Sequential Thinking",
+    "description": "Dynamic, reflective problem-solving through thought sequences.",
+    "plainDescription": "AI가 복잡한 문제를 단계별로 깊이 생각할 수 있게 해줘요. 어려운 분석이나 계획 수립 시 AI의 사고력이 향상됩니다.",
+    "category": "ai",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-sequential-thinking",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 4500,
+    "lastUpdated": "2025-12-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
+    "usageExamples": [
+      "이 복잡한 아키텍처 결정을 단계별로 분석해줘",
+      "사업 계획의 리스크를 체계적으로 평가해줘"
+    ],
+    "permissions": [
+      "추가 권한 불필요 (로컬 실행)"
+    ]
+  },
+  {
+    "id": "memory-official",
+    "name": "Memory",
+    "description": "Knowledge graph-based persistent memory for AI assistants.",
+    "plainDescription": "AI가 이전 대화 내용을 기억하고 다음 대화에서도 활용할 수 있어요. AI에게 내 취향이나 업무 방식을 한 번만 알려줘도 됩니다.",
+    "category": "ai",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-memory",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 5200,
+    "lastUpdated": "2025-12-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory",
+    "usageExamples": [
+      "내가 좋아하는 코딩 스타일 기억해줘",
+      "이전에 논의한 프로젝트 구조 떠올려줘"
+    ],
+    "permissions": [
+      "로컬 메모리 파일 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "fetch-official",
+    "name": "Fetch",
+    "description": "Web content fetching and conversion to markdown.",
+    "plainDescription": "AI가 특정 웹페이지를 직접 읽어올 수 있어요. URL을 주면 내용을 요약하거나 분석해줍니다.",
+    "category": "search",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-fetch",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 3600,
+    "lastUpdated": "2025-12-01",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch",
+    "usageExamples": [
+      "이 URL의 내용 요약해줘",
+      "공식 문서 읽고 사용법 설명해줘"
+    ],
+    "permissions": [
+      "지정된 URL 웹 콘텐츠 읽기"
+    ]
+  },
+  {
+    "id": "gitlab-official",
+    "name": "GitLab",
+    "description": "GitLab API integration for project management and code operations.",
+    "plainDescription": "AI가 GitLab 프로젝트를 읽고 이슈를 만들거나 MR을 관리할 수 있어요. GitHub 대신 GitLab을 사용하는 팀에 적합합니다.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-gitlab",
+    "requiredEnvVars": [
+      {
+        "name": "GITLAB_PERSONAL_ACCESS_TOKEN",
+        "description": "GitLab → User Settings → Access Tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "GITLAB_API_URL",
+        "description": "GitLab 인스턴스 URL입니다. 기본값: https://gitlab.com",
+        "required": false,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 980,
+    "lastUpdated": "2025-10-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/gitlab",
+    "usageExamples": [
+      "오픈 MR 목록 보여줘",
+      "이슈 #42 내용 요약해줘"
+    ],
+    "permissions": [
+      "GitLab 프로젝트 읽기/쓰기",
+      "이슈/MR 생성"
+    ]
+  },
+  {
+    "id": "linear-official",
+    "name": "Linear",
+    "description": "Linear project management integration for issues and cycles.",
+    "plainDescription": "AI가 Linear의 이슈를 조회하고 만들 수 있어요. 스프린트 계획이나 버그 트래킹을 AI와 함께 할 수 있습니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y @linear/mcp-server",
+    "requiredEnvVars": [
+      {
+        "name": "LINEAR_API_KEY",
+        "description": "Linear → Settings → API → Personal API keys에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1200,
+    "lastUpdated": "2025-11-25",
+    "officialSource": "https://github.com/linear/linear-mcp-server",
+    "usageExamples": [
+      "이번 스프린트 이슈 목록 보여줘",
+      "버그 이슈 새로 만들어줘"
+    ],
+    "permissions": [
+      "이슈 읽기/생성",
+      "사이클 조회"
+    ]
+  },
+  {
+    "id": "google-maps",
+    "name": "Google Maps",
+    "description": "Google Maps Platform integration for geocoding, directions, and places.",
+    "plainDescription": "AI가 지도 검색, 경로 안내, 장소 정보를 조회할 수 있어요. 여행 계획이나 위치 기반 작업에 활용할 수 있습니다.",
+    "category": "search",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-google-maps",
+    "requiredEnvVars": [
+      {
+        "name": "GOOGLE_MAPS_API_KEY",
+        "description": "Google Cloud Console → APIs & Services → Credentials에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1600,
+    "lastUpdated": "2025-11-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/google-maps",
+    "usageExamples": [
+      "강남역에서 판교까지 경로 알려줘",
+      "근처 카페 추천해줘"
+    ],
+    "permissions": [
+      "지도 검색",
+      "경로 안내",
+      "장소 정보 조회"
+    ]
+  },
+  {
+    "id": "time-official",
+    "name": "Time",
+    "description": "Current time and timezone conversion utilities for AI assistants.",
+    "plainDescription": "AI가 현재 시간과 전 세계 시간대를 알 수 있어요. 시간 관련 계산이나 회의 일정 조율에 유용합니다.",
+    "category": "productivity",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-time",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 890,
+    "lastUpdated": "2025-09-30",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/time",
+    "usageExamples": [
+      "뉴욕 현재 시간 알려줘",
+      "서울과 런던의 시차는?"
+    ],
+    "permissions": [
+      "시스템 시간 읽기"
+    ]
+  },
+  {
+    "id": "google-drive-official",
+    "name": "Google Drive",
+    "description": "Google Drive file access, search, and document reading.",
+    "plainDescription": "AI가 내 구글 드라이브 파일을 읽고 검색할 수 있어요. 문서 요약이나 특정 파일 찾기에 사용할 수 있습니다.",
+    "category": "file",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-gdrive",
+    "requiredEnvVars": [
+      {
+        "name": "GOOGLE_CLIENT_ID",
+        "description": "Google Cloud Console에서 OAuth 2.0 클라이언트 ID를 발급받으세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "GOOGLE_CLIENT_SECRET",
+        "description": "OAuth 2.0 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 2200,
+    "lastUpdated": "2025-11-30",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/gdrive",
+    "usageExamples": [
+      "보고서 관련 문서 찾아줘",
+      "지난달 회의록 파일 읽어줘"
+    ],
+    "permissions": [
+      "Google Drive 파일 읽기",
+      "파일 검색"
+    ]
+  },
+  {
+    "id": "aws-kb-retrieval",
+    "name": "AWS Knowledge Base",
+    "description": "Amazon Bedrock Knowledge Base retrieval for RAG workflows.",
+    "plainDescription": "AI가 AWS에 저장된 사내 문서를 검색하고 답변을 찾을 수 있어요. 사내 지식 베이스와 AI를 연결하고 싶을 때 사용합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-aws-kb-retrieval",
+    "requiredEnvVars": [
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "description": "AWS IAM 콘솔에서 액세스 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "description": "AWS IAM 시크릿 키입니다.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "AWS_REGION",
+        "description": "AWS 리전입니다. 예: us-east-1",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "vscode",
+      "zed"
+    ],
+    "stars": 760,
+    "lastUpdated": "2025-10-01",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/aws-kb-retrieval-server",
+    "permissions": [
+      "AWS Bedrock Knowledge Base 읽기",
+      "AWS 인증 필요"
+    ]
+  },
+  {
+    "id": "sentry-official",
+    "name": "Sentry",
+    "description": "Sentry error tracking integration for issues and stack traces.",
+    "plainDescription": "AI가 Sentry에서 에러 로그를 읽고 원인을 분석할 수 있어요. 버그 디버깅 시간을 대폭 줄여줍니다.",
+    "category": "dev",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-sentry",
+    "requiredEnvVars": [
+      {
+        "name": "SENTRY_AUTH_TOKEN",
+        "description": "Sentry → Settings → Auth Tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "SENTRY_ORGANIZATION_SLUG",
+        "description": "Sentry 조직 URL의 슬러그입니다. 예: my-company",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1100,
+    "lastUpdated": "2025-11-12",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/sentry",
+    "usageExamples": [
+      "최근 에러 5개 분석해줘",
+      "이 스택 트레이스 원인 찾아줘"
+    ],
+    "permissions": [
+      "Sentry 이슈 읽기",
+      "스택 트레이스 접근"
+    ]
+  },
+  {
+    "id": "everything-official",
+    "name": "Everything (Test)",
+    "description": "Reference implementation with all MCP primitives for testing.",
+    "plainDescription": "MCP의 모든 기능을 테스트할 수 있는 샘플 서버예요. 개발자가 MCP 클라이언트를 테스트할 때 사용합니다.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y @modelcontextprotocol/server-everything",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 650,
+    "lastUpdated": "2025-09-01",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/everything",
+    "permissions": [
+      "추가 권한 불필요 (테스트 서버)"
+    ]
+  },
+  {
+    "id": "jira-unofficial",
+    "name": "Jira",
+    "description": "Atlassian Jira integration for issue tracking and sprint management.",
+    "plainDescription": "AI가 Jira 티켓을 읽고 만들 수 있어요. 스프린트 현황 파악이나 티켓 작성을 AI와 함께 하세요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-jira",
+    "requiredEnvVars": [
+      {
+        "name": "JIRA_URL",
+        "description": "Jira 인스턴스 URL입니다. 예: https://your-company.atlassian.net",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "JIRA_EMAIL",
+        "description": "Jira 로그인 이메일입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "JIRA_API_TOKEN",
+        "description": "id.atlassian.com → Security → API tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 820,
+    "lastUpdated": "2025-10-28",
+    "officialSource": "https://github.com/sooperset/mcp-atlassian",
+    "usageExamples": [
+      "이번 스프린트 티켓 목록 보여줘",
+      "버그 티켓 새로 생성해줘"
+    ],
+    "permissions": [
+      "Jira 이슈 읽기/쓰기",
+      "스프린트 조회"
+    ]
+  },
+  {
+    "id": "git",
+    "name": "Git",
+    "description": "Local Git repository operations: log, diff, blame, branch management.",
+    "plainDescription": "AI가 내 로컬 Git 저장소를 읽고 커밋 이력을 분석하거나 변경 사항을 설명해줄 수 있어요.",
+    "category": "dev",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-git",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 2300,
+    "lastUpdated": "2025-12-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "usageExamples": [
+      "최근 커밋 10개 요약해줘",
+      "이 파일의 변경 이력 분석해줘",
+      "feature 브랜치와 main의 diff 보여줘"
+    ],
+    "permissions": [
+      "로컬 Git 저장소 읽기"
+    ]
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "description": "Docker container and image management via Docker API.",
+    "plainDescription": "AI가 도커 컨테이너를 조회하고 관리할 수 있어요. 컨테이너 상태 확인이나 로그 분석에 활용합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-docker",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1450,
+    "lastUpdated": "2025-11-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "실행 중인 컨테이너 목록 보여줘",
+      "nginx 컨테이너 로그 분석해줘"
+    ],
+    "permissions": [
+      "Docker 소켓 접근",
+      "컨테이너 조회 및 관리"
+    ]
+  },
+  {
+    "id": "playwright",
+    "name": "Playwright",
+    "description": "Browser automation with Playwright for testing and web scraping.",
+    "plainDescription": "AI가 Playwright를 사용해 웹 브라우저를 자동으로 조작할 수 있어요. E2E 테스트나 웹 스크래핑에 활용합니다.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y @playwright/mcp",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1800,
+    "lastUpdated": "2025-12-08",
+    "officialSource": "https://github.com/microsoft/playwright-mcp",
+    "usageExamples": [
+      "로그인 플로우 자동 테스트해줘",
+      "이 웹사이트 스크린샷 찍어줘"
+    ],
+    "permissions": [
+      "브라우저 실행",
+      "웹페이지 조작"
+    ]
+  },
+  {
+    "id": "github-actions",
+    "name": "GitHub Actions",
+    "description": "Manage and monitor GitHub Actions workflows and runs.",
+    "plainDescription": "AI가 GitHub Actions 워크플로우를 조회하고 실행 결과를 분석할 수 있어요. CI/CD 실패 원인을 AI와 함께 찾아보세요.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-github-actions",
+    "requiredEnvVars": [
+      {
+        "name": "GITHUB_TOKEN",
+        "description": "GitHub Personal Access Token (workflow 권한 포함).",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 720,
+    "lastUpdated": "2025-11-22",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "최근 실패한 워크플로우 원인 분석해줘",
+      "배포 파이프라인 상태 확인해줘"
+    ],
+    "permissions": [
+      "GitHub Actions 워크플로우 읽기"
+    ]
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "description": "Vercel deployment management: projects, deployments, and logs.",
+    "plainDescription": "AI가 Vercel 배포 상태를 확인하고 관리할 수 있어요. 배포 로그 분석이나 프로젝트 상태 점검에 활용합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-vercel",
+    "requiredEnvVars": [
+      {
+        "name": "VERCEL_TOKEN",
+        "description": "Vercel → Settings → Tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 650,
+    "lastUpdated": "2025-11-14",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Vercel 프로젝트 읽기",
+      "배포 조회"
+    ]
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify",
+    "description": "Netlify site and deployment management.",
+    "plainDescription": "AI가 Netlify에 배포된 사이트 상태를 확인하고 배포 이력을 분석할 수 있어요.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-netlify",
+    "requiredEnvVars": [
+      {
+        "name": "NETLIFY_TOKEN",
+        "description": "Netlify → User Settings → Applications → Personal Access Tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 480,
+    "lastUpdated": "2025-10-30",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Netlify 사이트 읽기",
+      "배포 조회"
+    ]
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "description": "Figma design file access and component inspection.",
+    "plainDescription": "AI가 Figma 디자인 파일을 읽고 컴포넌트 구조를 분석할 수 있어요. 디자인을 코드로 변환하거나 스타일 가이드를 추출할 때 유용합니다.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-figma",
+    "requiredEnvVars": [
+      {
+        "name": "FIGMA_API_KEY",
+        "description": "Figma → Account Settings → Personal access tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1100,
+    "lastUpdated": "2025-11-28",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "이 Figma 파일의 컴포넌트 목록 보여줘",
+      "디자인 토큰 추출해줘"
+    ],
+    "permissions": [
+      "Figma 파일 읽기",
+      "컴포넌트 조회"
+    ]
+  },
+  {
+    "id": "duckduckgo",
+    "name": "DuckDuckGo Search",
+    "description": "Privacy-focused web search using DuckDuckGo.",
+    "plainDescription": "AI가 DuckDuckGo로 인터넷 검색을 할 수 있어요. API 키 없이 무료로 사용할 수 있는 웹 검색입니다.",
+    "category": "search",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-duckduckgo",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 900,
+    "lastUpdated": "2025-12-02",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "TypeScript 5.0 새 기능 검색해줘",
+      "오늘 날씨 뉴스 찾아줘"
+    ],
+    "permissions": [
+      "인터넷 검색 (API 키 불필요)"
+    ]
+  },
+  {
+    "id": "tavily",
+    "name": "Tavily Search",
+    "description": "AI-optimized web search API with rich results.",
+    "plainDescription": "AI가 Tavily를 통해 최적화된 웹 검색을 할 수 있어요. 일반 검색보다 AI 친화적인 결과를 제공합니다.",
+    "category": "search",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-tavily",
+    "requiredEnvVars": [
+      {
+        "name": "TAVILY_API_KEY",
+        "description": "tavily.com에서 무료 계정으로 발급받으세요 (월 1,000회 무료).",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1200,
+    "lastUpdated": "2025-12-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "최신 AI 논문 검색해줘",
+      "경쟁사 분석 자료 찾아줘"
+    ],
+    "permissions": [
+      "Tavily API를 통한 웹 검색"
+    ]
+  },
+  {
+    "id": "wikipedia",
+    "name": "Wikipedia",
+    "description": "Wikipedia article search and content retrieval.",
+    "plainDescription": "AI가 Wikipedia를 검색하고 문서 내용을 가져올 수 있어요. 배경 지식이나 개념 설명이 필요할 때 활용합니다.",
+    "category": "search",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-wikipedia",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 680,
+    "lastUpdated": "2025-10-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "양자 컴퓨팅 개념 Wikipedia에서 찾아줘",
+      "대한민국 역사 요약해줘"
+    ],
+    "permissions": [
+      "Wikipedia 공개 API 접근"
+    ]
+  },
+  {
+    "id": "arxiv",
+    "name": "arXiv",
+    "description": "Search and retrieve academic papers from arXiv.",
+    "plainDescription": "AI가 arXiv에서 최신 학술 논문을 검색하고 요약할 수 있어요. 연구 트렌드 파악이나 논문 리뷰에 활용합니다.",
+    "category": "search",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-arxiv",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 550,
+    "lastUpdated": "2025-11-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "LLM 추론 관련 최신 논문 5개 찾아줘",
+      "이 논문 주요 내용 요약해줘"
+    ],
+    "permissions": [
+      "arXiv 공개 API 접근"
+    ]
+  },
+  {
+    "id": "hackernews",
+    "name": "Hacker News",
+    "description": "Hacker News top stories and comments retrieval.",
+    "plainDescription": "AI가 Hacker News 인기 글과 댓글을 읽어올 수 있어요. 기술 업계 트렌드를 빠르게 파악할 수 있습니다.",
+    "category": "search",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-hackernews",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 420,
+    "lastUpdated": "2025-10-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "오늘 HN 상위 10개 글 요약해줘",
+      "AI 관련 최신 토론 찾아줘"
+    ],
+    "permissions": [
+      "Hacker News 공개 API 접근"
+    ]
+  },
+  {
+    "id": "discord",
+    "name": "Discord",
+    "description": "Discord server management, message reading, and channel operations.",
+    "plainDescription": "AI가 Discord 서버의 메시지를 읽고 관리할 수 있어요. 커뮤니티 관리나 알림 자동화에 활용합니다.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-discord",
+    "requiredEnvVars": [
+      {
+        "name": "DISCORD_BOT_TOKEN",
+        "description": "Discord Developer Portal에서 봇을 생성하고 토큰을 복사하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 780,
+    "lastUpdated": "2025-11-16",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Discord 서버 메시지 읽기",
+      "채널 관리"
+    ]
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "description": "Telegram bot for sending messages and managing chats.",
+    "plainDescription": "AI가 Telegram 메시지를 읽고 보낼 수 있어요. 알림 봇이나 자동 응답 시스템에 활용합니다.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-telegram",
+    "requiredEnvVars": [
+      {
+        "name": "TELEGRAM_BOT_TOKEN",
+        "description": "Telegram의 @BotFather를 통해 봇을 만들고 토큰을 받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 620,
+    "lastUpdated": "2025-10-25",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Telegram 봇 메시지 송수신"
+    ]
+  },
+  {
+    "id": "gmail",
+    "name": "Gmail",
+    "description": "Gmail inbox management, email reading, and sending.",
+    "plainDescription": "AI가 Gmail을 읽고 이메일을 보낼 수 있어요. 이메일 정리, 요약, 자동 답장 초안 작성에 활용합니다.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-gmail",
+    "requiredEnvVars": [
+      {
+        "name": "GMAIL_CLIENT_ID",
+        "description": "Google Cloud Console에서 Gmail API 활성화 후 OAuth 클라이언트 ID를 발급받으세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "GMAIL_CLIENT_SECRET",
+        "description": "OAuth 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1050,
+    "lastUpdated": "2025-12-01",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "오늘 받은 중요 이메일 요약해줘",
+      "이 이메일에 답장 초안 작성해줘"
+    ],
+    "permissions": [
+      "Gmail 읽기",
+      "이메일 전송",
+      "레이블 관리"
+    ]
+  },
+  {
+    "id": "microsoft-teams",
+    "name": "Microsoft Teams",
+    "description": "Microsoft Teams integration for messages, channels, and meetings.",
+    "plainDescription": "AI가 Teams 채널 메시지를 읽고 관리할 수 있어요. Microsoft 기반 업무 환경에서 협업을 자동화합니다.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-teams",
+    "requiredEnvVars": [
+      {
+        "name": "TEAMS_CLIENT_ID",
+        "description": "Azure Active Directory에서 앱 등록 후 클라이언트 ID를 받으세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "TEAMS_CLIENT_SECRET",
+        "description": "Azure AD 앱의 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 490,
+    "lastUpdated": "2025-11-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Teams 메시지 읽기/쓰기",
+      "채널 조회"
+    ]
+  },
+  {
+    "id": "google-calendar",
+    "name": "Google Calendar",
+    "description": "Google Calendar event management and scheduling.",
+    "plainDescription": "AI가 구글 캘린더 일정을 읽고 새 이벤트를 만들 수 있어요. 일정 관리나 회의 스케줄링을 AI와 함께 하세요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-google-calendar",
+    "requiredEnvVars": [
+      {
+        "name": "GOOGLE_CLIENT_ID",
+        "description": "Google Cloud Console에서 Calendar API 활성화 후 OAuth 클라이언트 ID를 발급받으세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "GOOGLE_CLIENT_SECRET",
+        "description": "OAuth 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 880,
+    "lastUpdated": "2025-11-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "내일 일정 알려줘",
+      "다음 주 팀 미팅 잡아줘"
+    ],
+    "permissions": [
+      "Google Calendar 읽기/쓰기",
+      "이벤트 생성"
+    ]
+  },
+  {
+    "id": "google-sheets",
+    "name": "Google Sheets",
+    "description": "Google Sheets spreadsheet reading, writing, and analysis.",
+    "plainDescription": "AI가 구글 스프레드시트를 읽고 데이터를 분석하거나 값을 업데이트할 수 있어요. 데이터 정리나 보고서 작성에 활용합니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-google-sheets",
+    "requiredEnvVars": [
+      {
+        "name": "GOOGLE_SERVICE_ACCOUNT_KEY",
+        "description": "Google Cloud Console에서 서비스 계정 JSON 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1050,
+    "lastUpdated": "2025-12-03",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "이 시트의 데이터 분석해줘",
+      "판매 데이터를 월별로 집계해줘"
+    ],
+    "permissions": [
+      "Google Sheets 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "todoist",
+    "name": "Todoist",
+    "description": "Todoist task management integration.",
+    "plainDescription": "AI가 Todoist 할 일 목록을 읽고 새 태스크를 추가할 수 있어요. 할 일 관리를 AI와 함께 효율화하세요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-todoist",
+    "requiredEnvVars": [
+      {
+        "name": "TODOIST_API_TOKEN",
+        "description": "Todoist → Settings → Integrations → API token에서 복사하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 560,
+    "lastUpdated": "2025-10-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "오늘 할 일 목록 보여줘",
+      "새 태스크 추가해줘"
+    ],
+    "permissions": [
+      "Todoist 태스크 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "asana",
+    "name": "Asana",
+    "description": "Asana project and task management.",
+    "plainDescription": "AI가 Asana 프로젝트의 태스크를 조회하고 업데이트할 수 있어요. 팀 프로젝트 관리를 AI와 함께 하세요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-asana",
+    "requiredEnvVars": [
+      {
+        "name": "ASANA_ACCESS_TOKEN",
+        "description": "Asana Developer Console에서 개인 액세스 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 480,
+    "lastUpdated": "2025-10-22",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Asana 태스크/프로젝트 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "trello",
+    "name": "Trello",
+    "description": "Trello board and card management.",
+    "plainDescription": "AI가 Trello 보드의 카드를 읽고 이동하거나 새 카드를 만들 수 있어요. 칸반 보드 관리를 자동화하세요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-trello",
+    "requiredEnvVars": [
+      {
+        "name": "TRELLO_API_KEY",
+        "description": "trello.com/app-key 에서 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "TRELLO_TOKEN",
+        "description": "Trello API 키 페이지에서 토큰을 생성하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 420,
+    "lastUpdated": "2025-10-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Trello 보드/카드 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "confluence",
+    "name": "Confluence",
+    "description": "Atlassian Confluence wiki page reading and creation.",
+    "plainDescription": "AI가 Confluence 문서를 읽고 새 페이지를 만들 수 있어요. 팀 위키 관리나 문서 자동화에 활용합니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-confluence",
+    "requiredEnvVars": [
+      {
+        "name": "CONFLUENCE_URL",
+        "description": "Confluence 인스턴스 URL입니다. 예: https://company.atlassian.net/wiki",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "CONFLUENCE_EMAIL",
+        "description": "Atlassian 계정 이메일입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "CONFLUENCE_API_TOKEN",
+        "description": "id.atlassian.com → Security → API tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 610,
+    "lastUpdated": "2025-11-02",
+    "officialSource": "https://github.com/sooperset/mcp-atlassian",
+    "permissions": [
+      "Confluence 페이지 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "obsidian",
+    "name": "Obsidian",
+    "description": "Obsidian vault note reading and management.",
+    "plainDescription": "AI가 내 Obsidian 노트를 읽고 새 노트를 작성할 수 있어요. 개인 지식 베이스와 AI를 연결하세요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-obsidian",
+    "requiredEnvVars": [
+      {
+        "name": "OBSIDIAN_API_KEY",
+        "description": "Obsidian Local REST API 플러그인 설치 후 생성되는 API 키입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 850,
+    "lastUpdated": "2025-11-28",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "AI 관련 노트 모두 찾아줘",
+      "오늘 학습 내용 새 노트로 정리해줘"
+    ],
+    "permissions": [
+      "Obsidian 볼트 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "airtable",
+    "name": "Airtable",
+    "description": "Airtable database and spreadsheet operations.",
+    "plainDescription": "AI가 Airtable 베이스의 데이터를 읽고 레코드를 추가하거나 업데이트할 수 있어요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-airtable",
+    "requiredEnvVars": [
+      {
+        "name": "AIRTABLE_API_KEY",
+        "description": "Airtable → Account → API에서 Personal Access Token을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 520,
+    "lastUpdated": "2025-10-25",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Airtable 베이스 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "google-docs",
+    "name": "Google Docs",
+    "description": "Google Docs document reading and editing.",
+    "plainDescription": "AI가 Google Docs 문서를 읽고 내용을 추가하거나 수정할 수 있어요. 문서 초안 작성이나 편집을 자동화합니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-google-docs",
+    "requiredEnvVars": [
+      {
+        "name": "GOOGLE_SERVICE_ACCOUNT_KEY",
+        "description": "Google Cloud Console에서 서비스 계정 JSON 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 740,
+    "lastUpdated": "2025-11-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Google Docs 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "mysql",
+    "name": "MySQL",
+    "description": "MySQL database read access and query execution.",
+    "plainDescription": "AI가 MySQL 데이터베이스에 연결하여 쿼리를 실행할 수 있어요. 데이터 분석이나 리포트 생성에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-mysql",
+    "requiredEnvVars": [
+      {
+        "name": "MYSQL_HOST",
+        "description": "MySQL 서버 호스트입니다. 예: localhost",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "MYSQL_USER",
+        "description": "MySQL 사용자 이름입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "MYSQL_PASSWORD",
+        "description": "MySQL 비밀번호입니다.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "MYSQL_DATABASE",
+        "description": "접속할 데이터베이스 이름입니다.",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 980,
+    "lastUpdated": "2025-11-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "orders 테이블에서 이번 달 매출 합산해줘",
+      "가장 많이 팔린 상품 Top 10 알려줘"
+    ],
+    "permissions": [
+      "MySQL 데이터베이스 읽기"
+    ]
+  },
+  {
+    "id": "mongodb",
+    "name": "MongoDB",
+    "description": "MongoDB database operations and document querying.",
+    "plainDescription": "AI가 MongoDB 컬렉션의 도큐먼트를 조회하고 분석할 수 있어요. NoSQL 데이터 분석 작업에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-mongodb",
+    "requiredEnvVars": [
+      {
+        "name": "MONGODB_URI",
+        "description": "MongoDB 연결 URI입니다. 예: mongodb://localhost:27017/mydb",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 870,
+    "lastUpdated": "2025-11-22",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "users 컬렉션 구조 보여줘",
+      "최근 7일 가입 사용자 수 쿼리해줘"
+    ],
+    "permissions": [
+      "MongoDB 컬렉션 읽기"
+    ]
+  },
+  {
+    "id": "redis",
+    "name": "Redis",
+    "description": "Redis cache and data structure operations.",
+    "plainDescription": "AI가 Redis 캐시 데이터를 조회하고 분석할 수 있어요. 캐시 현황 파악이나 성능 분석에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-redis",
+    "requiredEnvVars": [
+      {
+        "name": "REDIS_URL",
+        "description": "Redis 서버 URL입니다. 예: redis://localhost:6379",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 640,
+    "lastUpdated": "2025-10-30",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Redis 키-값 읽기"
+    ]
+  },
+  {
+    "id": "elasticsearch",
+    "name": "Elasticsearch",
+    "description": "Elasticsearch search and analytics operations.",
+    "plainDescription": "AI가 Elasticsearch 인덱스를 검색하고 집계 분석을 실행할 수 있어요. 로그 분석이나 전문 검색에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-elasticsearch",
+    "requiredEnvVars": [
+      {
+        "name": "ELASTICSEARCH_URL",
+        "description": "Elasticsearch 서버 URL입니다. 예: http://localhost:9200",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "ELASTICSEARCH_API_KEY",
+        "description": "Elasticsearch API 키입니다 (선택사항).",
+        "required": false,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 560,
+    "lastUpdated": "2025-11-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Elasticsearch 인덱스 검색"
+    ]
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "description": "Supabase database, auth, and storage operations.",
+    "plainDescription": "AI가 Supabase 데이터베이스를 조회하고 Edge Functions를 호출할 수 있어요. Supabase 기반 앱 개발에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y @supabase/mcp-server-supabase",
+    "requiredEnvVars": [
+      {
+        "name": "SUPABASE_URL",
+        "description": "Supabase 프로젝트 URL입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "SUPABASE_SERVICE_ROLE_KEY",
+        "description": "Supabase → Settings → API에서 service_role 키를 복사하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1200,
+    "lastUpdated": "2025-12-12",
+    "officialSource": "https://github.com/supabase-community/supabase-mcp",
+    "usageExamples": [
+      "profiles 테이블 데이터 조회해줘",
+      "신규 사용자 수 분석해줘"
+    ],
+    "permissions": [
+      "Supabase DB 읽기/쓰기",
+      "Storage 접근"
+    ]
+  },
+  {
+    "id": "firebase",
+    "name": "Firebase",
+    "description": "Firebase Firestore and Realtime Database operations.",
+    "plainDescription": "AI가 Firebase Firestore 데이터를 읽고 문서를 조회할 수 있어요. Firebase 기반 앱 개발 및 분석에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-firebase",
+    "requiredEnvVars": [
+      {
+        "name": "FIREBASE_SERVICE_ACCOUNT",
+        "description": "Firebase Console → Project Settings → Service accounts에서 JSON 키를 생성하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 720,
+    "lastUpdated": "2025-11-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Firebase Firestore 읽기",
+      "Realtime DB 접근"
+    ]
+  },
+  {
+    "id": "neon",
+    "name": "Neon",
+    "description": "Neon serverless PostgreSQL database operations.",
+    "plainDescription": "AI가 Neon 서버리스 Postgres 데이터베이스에 연결하고 쿼리를 실행할 수 있어요.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-neon",
+    "requiredEnvVars": [
+      {
+        "name": "NEON_DATABASE_URL",
+        "description": "Neon 대시보드에서 연결 문자열을 복사하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 480,
+    "lastUpdated": "2025-11-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Neon PostgreSQL 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "pinecone",
+    "name": "Pinecone",
+    "description": "Pinecone vector database for semantic search and RAG.",
+    "plainDescription": "AI가 Pinecone 벡터 DB를 검색하고 임베딩을 활용할 수 있어요. 의미 기반 검색이나 RAG 구축에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-pinecone",
+    "requiredEnvVars": [
+      {
+        "name": "PINECONE_API_KEY",
+        "description": "Pinecone 콘솔에서 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 680,
+    "lastUpdated": "2025-11-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Pinecone 인덱스 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "description": "Cloudflare Workers, KV, and DNS management.",
+    "plainDescription": "AI가 Cloudflare Workers, KV 스토리지, DNS 설정을 관리할 수 있어요. 엣지 서비스 관리를 자동화합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y @cloudflare/mcp-server-cloudflare",
+    "requiredEnvVars": [
+      {
+        "name": "CLOUDFLARE_API_TOKEN",
+        "description": "Cloudflare → My Profile → API Tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 980,
+    "lastUpdated": "2025-12-05",
+    "officialSource": "https://github.com/cloudflare/mcp-server-cloudflare",
+    "usageExamples": [
+      "Workers 목록 보여줘",
+      "KV 스토어 데이터 조회해줘"
+    ],
+    "permissions": [
+      "Cloudflare Workers 읽기/배포",
+      "KV 접근",
+      "DNS 조회"
+    ]
+  },
+  {
+    "id": "aws-s3",
+    "name": "AWS S3",
+    "description": "Amazon S3 bucket and object operations.",
+    "plainDescription": "AI가 AWS S3 버킷의 파일 목록을 조회하고 내용을 읽을 수 있어요. 파일 관리나 데이터 분석에 활용합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-aws-s3",
+    "requiredEnvVars": [
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "description": "AWS IAM에서 S3 접근 권한이 있는 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "description": "AWS IAM 시크릿 키입니다.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "AWS_REGION",
+        "description": "S3 버킷이 위치한 AWS 리전입니다.",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 620,
+    "lastUpdated": "2025-10-28",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "S3 버킷 읽기",
+      "객체 조회"
+    ]
+  },
+  {
+    "id": "azure",
+    "name": "Azure",
+    "description": "Microsoft Azure cloud resource management.",
+    "plainDescription": "AI가 Azure 리소스를 조회하고 관리할 수 있어요. Azure 기반 인프라 관리를 자동화합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-azure",
+    "requiredEnvVars": [
+      {
+        "name": "AZURE_CLIENT_ID",
+        "description": "Azure Active Directory 앱 등록 클라이언트 ID입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "AZURE_CLIENT_SECRET",
+        "description": "Azure AD 앱 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "AZURE_TENANT_ID",
+        "description": "Azure 테넌트 ID입니다.",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 540,
+    "lastUpdated": "2025-11-12",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Azure 리소스 읽기/관리"
+    ]
+  },
+  {
+    "id": "gcp",
+    "name": "Google Cloud Platform",
+    "description": "Google Cloud resource management and operations.",
+    "plainDescription": "AI가 GCP 리소스를 조회하고 Cloud Storage, BigQuery 등을 관리할 수 있어요.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-gcp",
+    "requiredEnvVars": [
+      {
+        "name": "GOOGLE_APPLICATION_CREDENTIALS",
+        "description": "Google Cloud 서비스 계정 JSON 파일 경로입니다.",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 510,
+    "lastUpdated": "2025-11-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "GCP 리소스 읽기/관리"
+    ]
+  },
+  {
+    "id": "terraform",
+    "name": "Terraform",
+    "description": "Terraform state and infrastructure management.",
+    "plainDescription": "AI가 Terraform 상태 파일을 읽고 인프라 변경 사항을 분석할 수 있어요. IaC 관리 자동화에 활용합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-terraform",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 640,
+    "lastUpdated": "2025-11-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Terraform 상태 파일 읽기"
+    ]
+  },
+  {
+    "id": "digitalocean",
+    "name": "DigitalOcean",
+    "description": "DigitalOcean droplet and service management.",
+    "plainDescription": "AI가 DigitalOcean 드롭릿과 서비스를 조회하고 관리할 수 있어요.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-digitalocean",
+    "requiredEnvVars": [
+      {
+        "name": "DIGITALOCEAN_TOKEN",
+        "description": "DigitalOcean → API → Tokens/Keys에서 개인 액세스 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 380,
+    "lastUpdated": "2025-10-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "DigitalOcean 리소스 읽기/관리"
+    ]
+  },
+  {
+    "id": "railway",
+    "name": "Railway",
+    "description": "Railway platform deployment and service management.",
+    "plainDescription": "AI가 Railway에 배포된 서비스 상태를 확인하고 배포를 관리할 수 있어요.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-railway",
+    "requiredEnvVars": [
+      {
+        "name": "RAILWAY_TOKEN",
+        "description": "Railway → Account Settings → Tokens에서 API 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 320,
+    "lastUpdated": "2025-10-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Railway 서비스 읽기/배포"
+    ]
+  },
+  {
+    "id": "dropbox",
+    "name": "Dropbox",
+    "description": "Dropbox file and folder operations.",
+    "plainDescription": "AI가 Dropbox 파일을 읽고 검색할 수 있어요. 클라우드 파일 관리를 자동화합니다.",
+    "category": "file",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-dropbox",
+    "requiredEnvVars": [
+      {
+        "name": "DROPBOX_ACCESS_TOKEN",
+        "description": "Dropbox Developer App Console에서 액세스 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 450,
+    "lastUpdated": "2025-10-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Dropbox 파일 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "onedrive",
+    "name": "OneDrive",
+    "description": "Microsoft OneDrive file access and management.",
+    "plainDescription": "AI가 OneDrive 파일을 읽고 검색할 수 있어요. Microsoft 365 파일 관리 자동화에 활용합니다.",
+    "category": "file",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-onedrive",
+    "requiredEnvVars": [
+      {
+        "name": "ONEDRIVE_CLIENT_ID",
+        "description": "Azure Portal에서 앱 등록 후 클라이언트 ID를 발급받으세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "ONEDRIVE_CLIENT_SECRET",
+        "description": "Azure AD 앱 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 360,
+    "lastUpdated": "2025-10-12",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "OneDrive 파일 읽기"
+    ]
+  },
+  {
+    "id": "box",
+    "name": "Box",
+    "description": "Box cloud storage file and folder management.",
+    "plainDescription": "AI가 Box 클라우드 스토리지의 파일을 읽고 관리할 수 있어요.",
+    "category": "file",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-box",
+    "requiredEnvVars": [
+      {
+        "name": "BOX_CLIENT_ID",
+        "description": "Box Developer Console에서 앱을 만들고 클라이언트 ID를 복사하세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "BOX_CLIENT_SECRET",
+        "description": "Box 앱 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 280,
+    "lastUpdated": "2025-10-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Box 파일 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "huggingface",
+    "name": "HuggingFace",
+    "description": "HuggingFace Hub model and dataset operations.",
+    "plainDescription": "AI가 HuggingFace 허브의 모델과 데이터셋을 검색하고 정보를 가져올 수 있어요. ML 연구나 모델 비교에 활용합니다.",
+    "category": "ai",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-huggingface",
+    "requiredEnvVars": [
+      {
+        "name": "HUGGINGFACE_TOKEN",
+        "description": "huggingface.co → Settings → Access Tokens에서 발급하세요 (무료).",
+        "required": false,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 780,
+    "lastUpdated": "2025-11-25",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "텍스트 분류에 좋은 모델 추천해줘",
+      "이 데이터셋 정보 알려줘"
+    ],
+    "permissions": [
+      "HuggingFace Hub API 접근"
+    ]
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "description": "OpenAI API integration for models, assistants, and files.",
+    "plainDescription": "AI가 OpenAI API를 사용해 다른 AI 모델을 호출하거나 Assistant를 관리할 수 있어요.",
+    "category": "ai",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-openai",
+    "requiredEnvVars": [
+      {
+        "name": "OPENAI_API_KEY",
+        "description": "platform.openai.com → API Keys에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 1400,
+    "lastUpdated": "2025-12-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "OpenAI API 호출",
+      "Assistant 관리"
+    ]
+  },
+  {
+    "id": "replicate",
+    "name": "Replicate",
+    "description": "Run AI models on Replicate's cloud platform.",
+    "plainDescription": "AI가 Replicate에서 이미지 생성, 음성 처리 등 다양한 AI 모델을 실행할 수 있어요.",
+    "category": "ai",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-replicate",
+    "requiredEnvVars": [
+      {
+        "name": "REPLICATE_API_TOKEN",
+        "description": "replicate.com → Account → API tokens에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 620,
+    "lastUpdated": "2025-11-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Replicate 모델 실행"
+    ]
+  },
+  {
+    "id": "stability-ai",
+    "name": "Stability AI",
+    "description": "Stable Diffusion image generation via Stability AI API.",
+    "plainDescription": "AI가 텍스트 설명으로 이미지를 생성할 수 있어요. 디자인 작업이나 창의적 콘텐츠 생성에 활용합니다.",
+    "category": "ai",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-stability-ai",
+    "requiredEnvVars": [
+      {
+        "name": "STABILITY_API_KEY",
+        "description": "platform.stability.ai에서 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 550,
+    "lastUpdated": "2025-11-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Stability AI API 호출",
+      "이미지 생성"
+    ]
+  },
+  {
+    "id": "langsmith",
+    "name": "LangSmith",
+    "description": "LangSmith LLM observability and trace management.",
+    "plainDescription": "AI가 LangSmith에서 LLM 실행 트레이스를 조회하고 성능을 분석할 수 있어요.",
+    "category": "ai",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-langsmith",
+    "requiredEnvVars": [
+      {
+        "name": "LANGCHAIN_API_KEY",
+        "description": "smith.langchain.com에서 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 420,
+    "lastUpdated": "2025-11-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "LangSmith 트레이스 읽기"
+    ]
+  },
+  {
+    "id": "weather",
+    "name": "Weather",
+    "description": "OpenWeatherMap weather data and forecasts.",
+    "plainDescription": "AI가 현재 날씨와 날씨 예보를 가져올 수 있어요. 날씨 기반 계획 수립이나 여행 준비에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-openweather",
+    "requiredEnvVars": [
+      {
+        "name": "OPENWEATHER_API_KEY",
+        "description": "openweathermap.org에서 무료 계정으로 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 580,
+    "lastUpdated": "2025-10-25",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "서울 오늘 날씨 알려줘",
+      "이번 주말 제주도 날씨 예보 보여줘"
+    ],
+    "permissions": [
+      "OpenWeatherMap API 접근"
+    ]
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "description": "Stripe payment data and transaction management.",
+    "plainDescription": "AI가 Stripe 결제 데이터를 조회하고 고객 정보를 분석할 수 있어요. 매출 분석이나 결제 문제 해결에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y @stripe/agent-toolkit",
+    "requiredEnvVars": [
+      {
+        "name": "STRIPE_SECRET_KEY",
+        "description": "Stripe 대시보드 → Developers → API keys에서 시크릿 키를 복사하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 920,
+    "lastUpdated": "2025-12-01",
+    "officialSource": "https://github.com/stripe/agent-toolkit",
+    "usageExamples": [
+      "지난달 매출 총액 알려줘",
+      "최근 실패한 결제 목록 보여줘"
+    ],
+    "permissions": [
+      "Stripe 결제/고객 데이터 읽기"
+    ]
+  },
+  {
+    "id": "twilio",
+    "name": "Twilio",
+    "description": "Twilio SMS, calls, and messaging capabilities.",
+    "plainDescription": "AI가 Twilio를 통해 SMS를 보내거나 전화를 관리할 수 있어요. 알림 자동화나 고객 소통에 활용합니다.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-twilio",
+    "requiredEnvVars": [
+      {
+        "name": "TWILIO_ACCOUNT_SID",
+        "description": "Twilio 콘솔 대시보드에서 Account SID를 복사하세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "TWILIO_AUTH_TOKEN",
+        "description": "Twilio 콘솔 대시보드에서 Auth Token을 복사하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 460,
+    "lastUpdated": "2025-10-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "SMS 발송",
+      "전화 관리"
+    ]
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "description": "YouTube video data, transcripts, and channel management.",
+    "plainDescription": "AI가 YouTube 영상 정보와 자막을 가져올 수 있어요. 영상 요약이나 채널 분석에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-youtube",
+    "requiredEnvVars": [
+      {
+        "name": "YOUTUBE_API_KEY",
+        "description": "Google Cloud Console에서 YouTube Data API v3를 활성화하고 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 740,
+    "lastUpdated": "2025-11-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "이 YouTube 영상 요약해줘",
+      "채널 최신 영상 목록 보여줘"
+    ],
+    "permissions": [
+      "YouTube API 읽기"
+    ]
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "description": "Spotify music playback control and library management.",
+    "plainDescription": "AI가 Spotify 재생 목록을 관리하고 음악을 제어할 수 있어요. 음악 취향에 맞는 플레이리스트 자동 생성에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-spotify",
+    "requiredEnvVars": [
+      {
+        "name": "SPOTIFY_CLIENT_ID",
+        "description": "Spotify Developer Dashboard에서 앱을 만들고 Client ID를 복사하세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "SPOTIFY_CLIENT_SECRET",
+        "description": "Spotify 앱 Client Secret입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 680,
+    "lastUpdated": "2025-11-02",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Spotify 재생 제어",
+      "플레이리스트 관리"
+    ]
+  },
+  {
+    "id": "news",
+    "name": "News API",
+    "description": "Real-time news headlines and articles from worldwide sources.",
+    "plainDescription": "AI가 전 세계 뉴스 헤드라인과 기사를 검색할 수 있어요. 뉴스 브리핑이나 시장 동향 파악에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-newsapi",
+    "requiredEnvVars": [
+      {
+        "name": "NEWS_API_KEY",
+        "description": "newsapi.org에서 무료 계정으로 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 500,
+    "lastUpdated": "2025-10-28",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "오늘 기술 분야 주요 뉴스 요약해줘",
+      "스타트업 관련 최신 기사 찾아줘"
+    ],
+    "permissions": [
+      "News API 접근"
+    ]
+  },
+  {
+    "id": "currency",
+    "name": "Currency Exchange",
+    "description": "Real-time currency exchange rates and conversion.",
+    "plainDescription": "AI가 실시간 환율 정보를 가져올 수 있어요. 해외 거래나 여행 비용 계산에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-currency",
+    "requiredEnvVars": [
+      {
+        "name": "EXCHANGE_RATE_API_KEY",
+        "description": "exchangerate-api.com에서 무료 API 키를 발급받으세요.",
+        "required": false,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 330,
+    "lastUpdated": "2025-10-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "현재 달러-원 환율 알려줘",
+      "100달러를 유로로 환산해줘"
+    ],
+    "permissions": [
+      "환율 API 접근"
+    ]
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit",
+    "description": "Reddit subreddit and post reading.",
+    "plainDescription": "AI가 Reddit 서브레딧의 글과 댓글을 읽을 수 있어요. 커뮤니티 여론 파악이나 트렌드 분석에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-reddit",
+    "requiredEnvVars": [
+      {
+        "name": "REDDIT_CLIENT_ID",
+        "description": "reddit.com/prefs/apps에서 앱을 만들고 클라이언트 ID를 복사하세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "REDDIT_CLIENT_SECRET",
+        "description": "Reddit 앱 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 420,
+    "lastUpdated": "2025-10-22",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Reddit 공개 글/댓글 읽기"
+    ]
+  },
+  {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "description": "HubSpot CRM contacts, deals, and marketing automation.",
+    "plainDescription": "AI가 HubSpot CRM의 연락처와 딜을 조회하고 업데이트할 수 있어요. 영업 자동화나 고객 관리에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-hubspot",
+    "requiredEnvVars": [
+      {
+        "name": "HUBSPOT_ACCESS_TOKEN",
+        "description": "HubSpot → Settings → Private Apps에서 액세스 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 560,
+    "lastUpdated": "2025-11-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "이번 달 새 연락처 목록 보여줘",
+      "진행 중인 딜 현황 요약해줘"
+    ],
+    "permissions": [
+      "HubSpot CRM 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "shopify",
+    "name": "Shopify",
+    "description": "Shopify store management: products, orders, and customers.",
+    "plainDescription": "AI가 Shopify 스토어의 주문, 상품, 고객 데이터를 조회하고 분석할 수 있어요.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-shopify",
+    "requiredEnvVars": [
+      {
+        "name": "SHOPIFY_SHOP_DOMAIN",
+        "description": "Shopify 스토어 도메인입니다. 예: my-store.myshopify.com",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "SHOPIFY_ACCESS_TOKEN",
+        "description": "Shopify Partners에서 앱을 만들고 액세스 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 630,
+    "lastUpdated": "2025-11-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "오늘 주문 현황 알려줘",
+      "재고 부족 상품 목록 보여줘"
+    ],
+    "permissions": [
+      "Shopify 스토어 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "sendgrid",
+    "name": "SendGrid",
+    "description": "SendGrid email sending and template management.",
+    "plainDescription": "AI가 SendGrid를 통해 이메일을 보내고 캠페인 통계를 분석할 수 있어요.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-sendgrid",
+    "requiredEnvVars": [
+      {
+        "name": "SENDGRID_API_KEY",
+        "description": "SendGrid → Settings → API Keys에서 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 380,
+    "lastUpdated": "2025-10-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "SendGrid 이메일 전송",
+      "템플릿 관리"
+    ]
+  },
+  {
+    "id": "datadog",
+    "name": "Datadog",
+    "description": "Datadog monitoring, metrics, and log analysis.",
+    "plainDescription": "AI가 Datadog 모니터링 데이터와 로그를 분석할 수 있어요. 인프라 장애 원인 파악이나 성능 분석에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-datadog",
+    "requiredEnvVars": [
+      {
+        "name": "DATADOG_API_KEY",
+        "description": "Datadog → Organization Settings → API Keys에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "DATADOG_APP_KEY",
+        "description": "Datadog Application Key입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 540,
+    "lastUpdated": "2025-11-22",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "최근 에러 스파이크 원인 분석해줘",
+      "API 응답 시간 트렌드 보여줘"
+    ],
+    "permissions": [
+      "Datadog 메트릭/로그 읽기"
+    ]
+  },
+  {
+    "id": "pagerduty",
+    "name": "PagerDuty",
+    "description": "PagerDuty incident management and on-call scheduling.",
+    "plainDescription": "AI가 PagerDuty 인시던트를 조회하고 분석할 수 있어요. 장애 대응 자동화에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-pagerduty",
+    "requiredEnvVars": [
+      {
+        "name": "PAGERDUTY_API_TOKEN",
+        "description": "PagerDuty → My Profile → User Settings → API Access에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 320,
+    "lastUpdated": "2025-10-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "PagerDuty 인시던트 읽기"
+    ]
+  },
+  {
+    "id": "zendesk",
+    "name": "Zendesk",
+    "description": "Zendesk customer support ticket management.",
+    "plainDescription": "AI가 Zendesk 지원 티켓을 읽고 분류하거나 답변 초안을 작성할 수 있어요. 고객 지원 업무 자동화에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-zendesk",
+    "requiredEnvVars": [
+      {
+        "name": "ZENDESK_SUBDOMAIN",
+        "description": "Zendesk URL의 서브도메인입니다. 예: yourcompany",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "ZENDESK_EMAIL",
+        "description": "Zendesk 관리자 이메일입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "ZENDESK_API_TOKEN",
+        "description": "Zendesk → Admin → Channels → API에서 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 410,
+    "lastUpdated": "2025-10-25",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Zendesk 티켓 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "salesforce",
+    "name": "Salesforce",
+    "description": "Salesforce CRM data access and Apex operations.",
+    "plainDescription": "AI가 Salesforce CRM의 리드, 기회, 계정 데이터를 조회하고 분석할 수 있어요. 영업 분석이나 CRM 자동화에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-salesforce",
+    "requiredEnvVars": [
+      {
+        "name": "SALESFORCE_USERNAME",
+        "description": "Salesforce 계정 사용자명입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "SALESFORCE_PASSWORD",
+        "description": "Salesforce 계정 비밀번호입니다.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "SALESFORCE_SECURITY_TOKEN",
+        "description": "Salesforce → Settings → My Personal Information → Reset My Security Token에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 490,
+    "lastUpdated": "2025-11-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Salesforce CRM 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "google-analytics",
+    "name": "Google Analytics",
+    "description": "Google Analytics 4 data and reporting.",
+    "plainDescription": "AI가 Google Analytics 데이터를 분석하고 보고서를 만들 수 있어요. 웹사이트 트래픽 분석이나 전환율 최적화에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-google-analytics",
+    "requiredEnvVars": [
+      {
+        "name": "GA_PROPERTY_ID",
+        "description": "Google Analytics 4 속성 ID입니다. 예: 123456789",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "GOOGLE_SERVICE_ACCOUNT_KEY",
+        "description": "Google Cloud Console에서 서비스 계정 JSON 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 460,
+    "lastUpdated": "2025-11-12",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "이번 달 사이트 방문자 수 분석해줘",
+      "전환율이 가장 높은 페이지 알려줘"
+    ],
+    "permissions": [
+      "Google Analytics 데이터 읽기"
+    ]
+  },
+  {
+    "id": "perplexity",
+    "name": "Perplexity",
+    "description": "AI-powered search with citations via Perplexity API.",
+    "plainDescription": "AI가 Perplexity를 통해 최신 정보를 검색하고 출처가 있는 답변을 받을 수 있어요.",
+    "category": "search",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-perplexity",
+    "requiredEnvVars": [
+      {
+        "name": "PERPLEXITY_API_KEY",
+        "description": "perplexity.ai → API에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 780,
+    "lastUpdated": "2025-12-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Perplexity API 접근"
+    ]
+  },
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "description": "Zoom meeting management and transcript access.",
+    "plainDescription": "AI가 Zoom 미팅 일정을 관리하고 회의 내용을 요약할 수 있어요.",
+    "category": "communication",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-zoom",
+    "requiredEnvVars": [
+      {
+        "name": "ZOOM_CLIENT_ID",
+        "description": "Zoom Marketplace에서 앱을 만들고 클라이언트 ID를 복사하세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "ZOOM_CLIENT_SECRET",
+        "description": "Zoom 앱 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 380,
+    "lastUpdated": "2025-10-18",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Zoom 미팅 읽기/생성"
+    ]
+  },
+  {
+    "id": "monday",
+    "name": "Monday.com",
+    "description": "Monday.com work OS for project and task management.",
+    "plainDescription": "AI가 Monday.com 보드의 항목을 조회하고 업데이트할 수 있어요. 팀 프로젝트 관리를 자동화합니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-monday",
+    "requiredEnvVars": [
+      {
+        "name": "MONDAY_API_KEY",
+        "description": "Monday.com → 프로필 → Admin → API에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 340,
+    "lastUpdated": "2025-10-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Monday.com 보드 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "clickup",
+    "name": "ClickUp",
+    "description": "ClickUp project management platform integration.",
+    "plainDescription": "AI가 ClickUp의 태스크와 프로젝트를 조회하고 관리할 수 있어요.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-clickup",
+    "requiredEnvVars": [
+      {
+        "name": "CLICKUP_API_TOKEN",
+        "description": "ClickUp → Settings → Apps에서 API 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 300,
+    "lastUpdated": "2025-10-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "ClickUp 태스크/공간 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "evernote",
+    "name": "Evernote",
+    "description": "Evernote note and notebook access and management.",
+    "plainDescription": "AI가 Evernote 노트를 읽고 새 노트를 작성할 수 있어요. 아이디어 정리나 리서치 노트 관리에 활용합니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-evernote",
+    "requiredEnvVars": [
+      {
+        "name": "EVERNOTE_TOKEN",
+        "description": "Evernote Developer 페이지에서 API 토큰을 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 280,
+    "lastUpdated": "2025-09-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Evernote 노트 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "qdrant",
+    "name": "Qdrant",
+    "description": "Qdrant vector search engine for semantic similarity.",
+    "plainDescription": "AI가 Qdrant 벡터 검색엔진에서 의미 기반 유사 검색을 할 수 있어요. RAG 파이프라인 구축에 활용합니다.",
+    "category": "database",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-qdrant",
+    "requiredEnvVars": [
+      {
+        "name": "QDRANT_URL",
+        "description": "Qdrant 서버 URL입니다. 예: http://localhost:6333",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "QDRANT_API_KEY",
+        "description": "Qdrant Cloud API 키 (클라우드 사용 시).",
+        "required": false,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 520,
+    "lastUpdated": "2025-11-10",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Qdrant 컬렉션 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "kubernetes",
+    "name": "Kubernetes",
+    "description": "Kubernetes cluster management and pod operations.",
+    "plainDescription": "AI가 Kubernetes 클러스터의 파드와 서비스를 조회하고 관리할 수 있어요. 클러스터 운영 자동화에 활용합니다.",
+    "category": "cloud",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-k8s",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 860,
+    "lastUpdated": "2025-11-25",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "현재 실행 중인 파드 목록 보여줘",
+      "서비스 상태 확인해줘"
+    ],
+    "permissions": [
+      "kubectl 로컬 설정 접근",
+      "클러스터 읽기"
+    ]
+  },
+  {
+    "id": "bitbucket",
+    "name": "Bitbucket",
+    "description": "Atlassian Bitbucket repository and pull request management.",
+    "plainDescription": "AI가 Bitbucket 저장소를 읽고 PR을 관리할 수 있어요. Bitbucket 기반 팀에 적합합니다.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-bitbucket",
+    "requiredEnvVars": [
+      {
+        "name": "BITBUCKET_USERNAME",
+        "description": "Bitbucket 계정 사용자명입니다.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "BITBUCKET_APP_PASSWORD",
+        "description": "Bitbucket → Personal Settings → App passwords에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 420,
+    "lastUpdated": "2025-10-22",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Bitbucket 저장소 읽기",
+      "PR 관리"
+    ]
+  },
+  {
+    "id": "npm-search",
+    "name": "npm Registry",
+    "description": "npm package search and metadata retrieval.",
+    "plainDescription": "AI가 npm 패키지를 검색하고 버전, 다운로드 수, 의존성 정보를 가져올 수 있어요.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-npm-search",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 360,
+    "lastUpdated": "2025-10-12",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "react 패키지 최신 버전 알려줘",
+      "lodash 의존성 목록 보여줘"
+    ],
+    "permissions": [
+      "npm 공개 레지스트리 API 접근"
+    ]
+  },
+  {
+    "id": "mixpanel",
+    "name": "Mixpanel",
+    "description": "Mixpanel product analytics and event tracking.",
+    "plainDescription": "AI가 Mixpanel 이벤트 데이터를 분석하고 사용자 행동을 파악할 수 있어요. 제품 분석 자동화에 활용합니다.",
+    "category": "other",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-mixpanel",
+    "requiredEnvVars": [
+      {
+        "name": "MIXPANEL_SERVICE_ACCOUNT_USERNAME",
+        "description": "Mixpanel → Project Settings → Service Accounts에서 발급받으세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "MIXPANEL_SERVICE_ACCOUNT_SECRET",
+        "description": "Mixpanel 서비스 계정 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 290,
+    "lastUpdated": "2025-10-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Mixpanel 이벤트/사용자 데이터 읽기"
+    ]
+  },
+  {
+    "id": "serpapi",
+    "name": "SerpAPI",
+    "description": "Google, Bing, and other search engines via SerpAPI.",
+    "plainDescription": "AI가 SerpAPI를 통해 구글 검색 결과를 구조화된 형태로 받을 수 있어요. SEO 분석이나 경쟁사 조사에 활용합니다.",
+    "category": "search",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-serpapi",
+    "requiredEnvVars": [
+      {
+        "name": "SERPAPI_KEY",
+        "description": "serpapi.com에서 무료 체험 API 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 440,
+    "lastUpdated": "2025-10-20",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "SerpAPI Google/Bing 검색"
+    ]
+  },
+  {
+    "id": "pubmed",
+    "name": "PubMed",
+    "description": "PubMed biomedical literature search and retrieval.",
+    "plainDescription": "AI가 PubMed에서 의학·생명과학 논문을 검색하고 요약할 수 있어요. 의료 연구나 임상 근거 확인에 활용합니다.",
+    "category": "search",
+    "installType": "uvx",
+    "installCommand": "uvx mcp-server-pubmed",
+    "requiredEnvVars": [],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "claude-code",
+      "vscode",
+      "zed"
+    ],
+    "stars": 380,
+    "lastUpdated": "2025-10-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "usageExamples": [
+      "당뇨병 치료 최신 연구 찾아줘",
+      "이 약물의 임상 근거 논문 요약해줘"
+    ],
+    "permissions": [
+      "PubMed 공개 API 접근"
+    ]
+  },
+  {
+    "id": "docker-hub",
+    "name": "Docker Hub",
+    "description": "Docker Hub image search and metadata access.",
+    "plainDescription": "AI가 Docker Hub에서 컨테이너 이미지를 검색하고 태그 목록을 조회할 수 있어요.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-dockerhub",
+    "requiredEnvVars": [
+      {
+        "name": "DOCKERHUB_USERNAME",
+        "description": "Docker Hub 계정 사용자명입니다 (선택).",
+        "required": false,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 250,
+    "lastUpdated": "2025-09-28",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Docker Hub 공개 레지스트리 접근"
+    ]
+  },
+  {
+    "id": "microsoft-todo",
+    "name": "Microsoft To Do",
+    "description": "Microsoft To Do task management via Microsoft Graph API.",
+    "plainDescription": "AI가 Microsoft To Do 할 일을 읽고 새 태스크를 추가할 수 있어요. Microsoft 생태계 사용자에게 적합합니다.",
+    "category": "productivity",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-microsoft-todo",
+    "requiredEnvVars": [
+      {
+        "name": "MICROSOFT_CLIENT_ID",
+        "description": "Azure Portal에서 앱 등록 후 클라이언트 ID를 발급받으세요.",
+        "required": true,
+        "isSecret": false
+      },
+      {
+        "name": "MICROSOFT_CLIENT_SECRET",
+        "description": "Azure AD 앱 클라이언트 시크릿입니다.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 220,
+    "lastUpdated": "2025-09-15",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Microsoft To Do 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "linear-api",
+    "name": "Linear API (Extended)",
+    "description": "Extended Linear integration with team, project, and roadmap access.",
+    "plainDescription": "AI가 Linear의 팀 목표와 로드맵을 조회하고 프로젝트 현황을 분석할 수 있어요.",
+    "category": "dev",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-linear",
+    "requiredEnvVars": [
+      {
+        "name": "LINEAR_API_KEY",
+        "description": "Linear → Settings → API → Personal API keys에서 발급하세요.",
+        "required": true,
+        "isSecret": true
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 320,
+    "lastUpdated": "2025-10-05",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "Linear 팀/프로젝트 읽기/쓰기"
+    ]
+  },
+  {
+    "id": "aws-lambda",
+    "name": "AWS Lambda",
+    "description": "AWS Lambda function management and invocation.",
+    "plainDescription": "AI가 AWS Lambda 함수를 조회하고 실행할 수 있어요. 서버리스 백엔드 관리 자동화에 활용합니다.",
+    "category": "cloud",
+    "installType": "npx",
+    "installCommand": "npx -y mcp-server-aws-lambda",
+    "requiredEnvVars": [
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "description": "AWS IAM에서 Lambda 접근 권한이 있는 키를 발급받으세요.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "description": "AWS IAM 시크릿 키입니다.",
+        "required": true,
+        "isSecret": true
+      },
+      {
+        "name": "AWS_REGION",
+        "description": "Lambda 함수가 배포된 AWS 리전입니다.",
+        "required": true,
+        "isSecret": false
+      }
+    ],
+    "supportedClients": [
+      "claude-desktop",
+      "cursor",
+      "windsurf",
+      "vscode",
+      "zed"
+    ],
+    "stars": 340,
+    "lastUpdated": "2025-10-08",
+    "officialSource": "https://github.com/modelcontextprotocol/servers",
+    "permissions": [
+      "AWS Lambda 함수 읽기/실행"
+    ]
+  }
+]
