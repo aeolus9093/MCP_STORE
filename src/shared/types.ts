@@ -184,6 +184,16 @@ export const IPC = {
   UPDATE_DOWNLOAD:          "update:download",
   UPDATE_INSTALL:           "update:install",
   UPDATE_STATUS:            "update:status",   // main → renderer 이벤트
+
+  // ── Phase 5 — Auto Sync ───────────────────
+  SETTINGS_GET:             "settings:get",
+  SETTINGS_SET:             "settings:set",
+  METADATA_REFRESH:         "metadata:refresh",
+  METADATA_CACHE_GET:       "metadata:cacheGet",
+  DESCRIPTION_GENERATE:    "description:generate",
+  DESCRIPTION_CACHE_GET:   "description:cacheGet",
+  CONFIG_CHANGED:           "config:changed",     // main → renderer (event)
+  NEW_MCP_DETECTED:         "newMcp:detected",    // main → renderer (event)
 } as const;
 
 // ──────────────────────────────────────────────
@@ -219,3 +229,24 @@ export interface IPCResult<T = void> {
   data?: T;
   error?: string;
 }
+
+// ──────────────────────────────────────────────
+// Phase 5 — 앱 설정
+// ──────────────────────────────────────────────
+
+export interface AppSettings {
+  claudeApiKey:    string;   // Claude API Key (선택적)
+  autoSyncEnabled: boolean;  // 6시간 주기 Auto Sync 활성화
+}
+
+// ──────────────────────────────────────────────
+// Phase 5 — 메타데이터 캐시
+// ──────────────────────────────────────────────
+
+export interface MetadataCacheEntry {
+  stars:       number;
+  lastUpdated: string;  // ISO 날짜
+  fetchedAt:   string;  // ISO 날짜
+}
+
+export type MetadataCache = Record<string, MetadataCacheEntry>;

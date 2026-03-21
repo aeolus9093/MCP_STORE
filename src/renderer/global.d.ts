@@ -14,6 +14,8 @@ import {
   Review,
   QualityScore,
   GitHubSyncResult,
+  AppSettings,
+  MetadataCache,
 } from "../shared/types";
 
 declare global {
@@ -82,6 +84,28 @@ declare global {
         message?: string;
       }) => void) => void;
       offUpdateStatus?: () => void;
+
+      // ── Phase 5 — Auto Sync ──────────────────
+
+      // Settings
+      getSettings:   () => Promise<IPCResult<AppSettings>>;
+      setSettings:   (s: AppSettings) => Promise<IPCResult>;
+
+      // 메타데이터 갱신 / 캐시 조회
+      refreshMetadata:   () => Promise<IPCResult<MetadataCache>>;
+      getMetadataCache:  () => Promise<IPCResult<MetadataCache>>;
+
+      // LLM 설명 생성 / 캐시 조회
+      generateDescription: (packageId: string) => Promise<IPCResult<string>>;
+      getDescriptionCache: () => Promise<IPCResult<Record<string, { description: string; generatedAt: string }>>>;
+
+      // 설정 파일 변경 이벤트
+      onConfigChanged:  (cb: (payload: { client: string; added: string[]; removed: string[] }) => void) => void;
+      offConfigChanged: () => void;
+
+      // 신규 MCP 감지 이벤트
+      onNewMcpDetected:  (cb: (payload: { newPackageNames: string[]; totalInRepo: number; lastSyncedAt: string }) => void) => void;
+      offNewMcpDetected: () => void;
     };
   }
 }

@@ -1,13 +1,22 @@
 // =============================================================
 // main/github-sync.ts — GitHub API로 modelcontextprotocol/servers 폴링
 // 새 MCP 감지 시 목록 반환. https 모듈 사용 (외부 패키지 없음)
+// Phase 5: ETag Conditional Requests + 6시간 Auto Sync + 메타데이터 갱신
 // =============================================================
 
-import * as https from "https";
-import * as fs    from "fs";
-import * as path  from "path";
-import * as os    from "os";
-import { IPCResult, GitHubSyncResult } from "../shared/types";
+import * as https  from "https";
+import * as http   from "http";
+import * as fs     from "fs";
+import * as path   from "path";
+import * as os     from "os";
+import { BrowserWindow } from "electron";
+import {
+  IPC,
+  IPCResult,
+  GitHubSyncResult,
+  MetadataCache,
+  MetadataCacheEntry,
+} from "../shared/types";
 
 // ──────────────────────────────────────────────
 // 내부 타입
@@ -27,11 +36,19 @@ interface GitHubTreeResponse {
 // 캐시 파일 경로
 // ──────────────────────────────────────────────
 
-const SYNC_CACHE_PATH = path.join(os.homedir(), ".mcp-store", "sync-cache.json");
+const MCP_STORE_DIR      = path.join(os.homedir(), ".mcp-store");
+const SYNC_CACHE_PATH    = path.join(MCP_STORE_DIR, "sync-cache.json");
+const METADATA_CACHE_PATH = path.join(MCP_STORE_DIR, "metadata-cache.json");
 
 interface SyncCache {
   knownPackageNames: string[];
   lastSyncedAt:      string;
+  etag?:             string;   // ETag for Conditional Requests
+  commitSha?:        string;   // 마지막으로 확인한 커밋 SHA
+}
+
+function ensureDir(): void {
+  if (!fs.existsSync(MCP_STORE_DIR)) fs.mkdirSync(MCP_STORE_DIR, { recursive: true });
 }
 
 function readSyncCache(): SyncCache {
@@ -45,11 +62,28 @@ function readSyncCache(): SyncCache {
 
 function writeSyncCache(cache: SyncCache): void {
   try {
-    const dir = path.dirname(SYNC_CACHE_PATH);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    ensureDir();
     fs.writeFileSync(SYNC_CACHE_PATH, JSON.stringify(cache, null, 2), "utf-8");
   } catch (err) {
     console.error("[github-sync] cache write error:", err);
+  }
+}
+
+function readMetadataCache(): MetadataCache {
+  try {
+    if (!fs.existsSync(METADATA_CACHE_PATH)) return {};
+    return JSON.parse(fs.readFileSync(METADATA_CACHE_PATH, "utf-8")) as MetadataCache;
+  } catch {
+    return {};
+  }
+}
+
+function writeMetadataCache(cache: MetadataCache): void {
+  try {
+    ensureDir();
+    fs.writeFileSync(METADATA_CACHE_PATH, JSON.stringify(cache, null, 2), "utf-8");
+  } catch (err) {
+    console.error("[github-sync] metadata cache write error:", err);
   }
 }
 
@@ -57,26 +91,47 @@ function writeSyncCache(cache: SyncCache): void {
 // HTTP 유틸
 // ──────────────────────────────────────────────
 
-function httpsGet(url: string): Promise<string> {
+interface HttpResponse {
+  statusCode: number;
+  body:       string;
+  headers:    http.IncomingHttpHeaders;
+}
+
+function httpsRequest(
+  url: string,
+  extraHeaders: Record<string, string> = {}
+): Promise<HttpResponse> {
   return new Promise((resolve, reject) => {
     const req = https.get(
       url,
       {
         headers: {
-          "User-Agent": "mcp-store/3.0",
+          "User-Agent": "mcp-store/5.0",
           "Accept":     "application/vnd.github+json",
+          ...extraHeaders,
         },
       },
       (res) => {
-        // GitHub API rate-limit / 4xx / 5xx 처리
-        if (res.statusCode && res.statusCode >= 400) {
+        const statusCode = res.statusCode ?? 0;
+
+        // 304 Not Modified — 캐시 유효
+        if (statusCode === 304) {
           res.resume();
-          reject(new Error(`GitHub API HTTP ${res.statusCode}: ${url}`));
+          resolve({ statusCode: 304, body: "", headers: res.headers });
           return;
         }
+
+        if (statusCode >= 400) {
+          res.resume();
+          reject(new Error(`GitHub API HTTP ${statusCode}: ${url}`));
+          return;
+        }
+
         let data = "";
         res.on("data", (chunk: Buffer) => (data += chunk.toString()));
-        res.on("end", () => resolve(data));
+        res.on("end", () =>
+          resolve({ statusCode, body: data, headers: res.headers })
+        );
         res.on("error", reject);
       }
     );
@@ -88,42 +143,63 @@ function httpsGet(url: string): Promise<string> {
 }
 
 // ──────────────────────────────────────────────
-// 공개 API
+// 공개 API — 저장소 동기화
 // ──────────────────────────────────────────────
 
 /**
  * syncWithGitHub — modelcontextprotocol/servers 저장소를 폴링
- * src/ 하위 top-level 디렉토리(=각 MCP)를 추출하고,
- * 이전 캐시에 없던 신규 이름 목록을 반환
+ * ETag Conditional Request로 rate limit 절약.
+ * 신규 MCP 이름 목록 반환.
  */
 export async function syncWithGitHub(
   knownIds: string[]
 ): Promise<IPCResult<GitHubSyncResult>> {
   try {
-    const raw = await httpsGet(
-      "https://api.github.com/repos/modelcontextprotocol/servers/git/trees/main?recursive=1"
+    const cache = readSyncCache();
+    const extraHeaders: Record<string, string> = {};
+    if (cache.etag) {
+      extraHeaders["If-None-Match"] = cache.etag;
+    }
+
+    const res = await httpsRequest(
+      "https://api.github.com/repos/modelcontextprotocol/servers/git/trees/main?recursive=1",
+      extraHeaders
     );
 
-    const body: GitHubTreeResponse = JSON.parse(raw);
+    // 304 — 변경 없음
+    if (res.statusCode === 304) {
+      return {
+        success: true,
+        data: {
+          newPackageNames: [],
+          totalInRepo:     cache.knownPackageNames.length,
+          lastSyncedAt:    cache.lastSyncedAt,
+        },
+      };
+    }
+
+    const body: GitHubTreeResponse = JSON.parse(res.body);
 
     // src/ 바로 아래 폴더만 추출 (= 각 MCP 패키지)
     const repoPackageNames = body.tree
       .filter((item) => item.type === "tree" && /^src\/[^/]+$/.test(item.path))
       .map((item)  => item.path.slice(4)); // "src/" 제거
 
-    const cache = readSyncCache();
-
-    // 신규 = 저장소에 있으나 캐시에 없고, knownIds에도 매핑되지 않은 것
+    // 신규 = 저장소에 있으나 캐시에 없고, knownIds에도 매핑 안 된 것
     const newPackageNames = repoPackageNames.filter(
       (name) =>
         !cache.knownPackageNames.includes(name) &&
-        !knownIds.some((id) => id === name || id.endsWith(`-${name}`) || id.startsWith(name))
+        !knownIds.some(
+          (id) => id === name || id.endsWith(`-${name}`) || id.startsWith(name)
+        )
     );
 
-    // 캐시 갱신
+    const newEtag = (res.headers.etag as string) ?? cache.etag;
+
     writeSyncCache({
       knownPackageNames: repoPackageNames,
       lastSyncedAt:      new Date().toISOString(),
+      etag:              newEtag,
     });
 
     return {
@@ -144,4 +220,134 @@ export async function syncWithGitHub(
  */
 export function getSyncCache(): SyncCache {
   return readSyncCache();
+}
+
+// ──────────────────────────────────────────────
+// 공개 API — 메타데이터 갱신
+// ──────────────────────────────────────────────
+
+/**
+ * GitHub URL에서 owner/repo 추출
+ * https://github.com/org/repo[/tree/...] → "org/repo"
+ */
+function extractOwnerRepo(officialSource: string): string | null {
+  try {
+    const url = new URL(officialSource);
+    if (url.hostname !== "github.com") return null;
+    const segments = url.pathname.replace(/^\//, "").split("/");
+    if (segments.length < 2) return null;
+    return `${segments[0]}/${segments[1]}`;
+  } catch {
+    return null;
+  }
+}
+
+interface GitHubRepoInfo {
+  stargazers_count: number;
+  pushed_at:        string;
+}
+
+/**
+ * refreshMetadataForPackages — 설치된 패키지들의 stars/lastUpdated를
+ * GitHub API로 갱신, metadata-cache.json에 저장
+ */
+export async function refreshMetadataForPackages(
+  packages: Array<{ id: string; officialSource: string }>
+): Promise<IPCResult<MetadataCache>> {
+  const cache = readMetadataCache();
+  let updated = 0;
+
+  for (const pkg of packages) {
+    const ownerRepo = extractOwnerRepo(pkg.officialSource);
+    if (!ownerRepo) continue;
+
+    try {
+      const res = await httpsRequest(
+        `https://api.github.com/repos/${ownerRepo}`
+      );
+      if (res.statusCode !== 200) continue;
+
+      const info = JSON.parse(res.body) as GitHubRepoInfo;
+      const entry: MetadataCacheEntry = {
+        stars:       info.stargazers_count,
+        lastUpdated: info.pushed_at,
+        fetchedAt:   new Date().toISOString(),
+      };
+
+      const prev = cache[pkg.id];
+      if (
+        !prev ||
+        prev.stars !== entry.stars ||
+        prev.lastUpdated !== entry.lastUpdated
+      ) {
+        cache[pkg.id] = entry;
+        updated++;
+      }
+    } catch (err) {
+      console.warn(`[github-sync] metadata fetch failed for ${pkg.id}:`, (err as Error).message);
+    }
+  }
+
+  if (updated > 0) writeMetadataCache(cache);
+
+  return { success: true, data: cache };
+}
+
+/**
+ * getMetadataCache — 메타데이터 캐시 반환
+ */
+export function getMetadataCache(): MetadataCache {
+  return readMetadataCache();
+}
+
+// ──────────────────────────────────────────────
+// 공개 API — 6시간 Auto Sync
+// ──────────────────────────────────────────────
+
+const AUTO_SYNC_INTERVAL_MS = 6 * 60 * 60 * 1_000; // 6시간
+
+let _autoSyncTimer: ReturnType<typeof setInterval> | null = null;
+
+/**
+ * startAutoSync — 앱 시작 시 1회 + 이후 6시간 주기로 syncWithGitHub 실행
+ * 신규 MCP 감지 시 renderer에 NEW_MCP_DETECTED 이벤트 전송
+ */
+export function startAutoSync(
+  win: BrowserWindow,
+  knownIdsGetter: () => string[],
+  intervalMs = AUTO_SYNC_INTERVAL_MS
+): void {
+  if (_autoSyncTimer) return; // 이미 실행 중이면 무시
+
+  const run = async () => {
+    try {
+      const result = await syncWithGitHub(knownIdsGetter());
+      if (
+        result.success &&
+        result.data &&
+        result.data.newPackageNames.length > 0
+      ) {
+        if (!win.isDestroyed()) {
+          win.webContents.send(IPC.NEW_MCP_DETECTED, result.data);
+        }
+      }
+    } catch (err) {
+      console.warn("[auto-sync] 실행 오류:", (err as Error).message);
+    }
+  };
+
+  // 앱 시작 시 1회 즉시 실행 (2초 지연으로 앱 초기화 완료 후 실행)
+  setTimeout(run, 2_000);
+
+  _autoSyncTimer = setInterval(run, intervalMs);
+}
+
+/**
+ * stopAutoSync — Auto Sync 타이머 정지
+ */
+export function stopAutoSync(): void {
+  if (_autoSyncTimer) {
+    clearInterval(_autoSyncTimer);
+    _autoSyncTimer = null;
+  }
 }
