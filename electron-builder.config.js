@@ -1,41 +1,43 @@
-/**
- * electron-builder 설정 (CommonJS)
- * TypeScript config 파싱 이슈 방지를 위해 .js로 변환
- */
-
 /** @type {import('electron-builder').Configuration} */
 const config = {
-  appId:       "dev.mcpstore.app",
+  appId: "dev.mcpstore.app",
   productName: "MCP Store",
-  icon:        "build/icon.png",
+  icon: "build/icon.png",
 
   directories: {
     buildResources: "build",
-    output:         "release",
+    output: "release",
   },
 
-  // files를 지정하지 않으면 electron-builder 기본값 사용
-  // 기본값: **/* + 표준 제외 목록 (node_modules/.cache 등)
-  // dist/main/main/index.js 는 기본값으로 반드시 포함됨
-
-  extraResources: [
+  // object 형태로 명시적 경로 지정 — **/* glob 이슈 우회
+  files: [
     {
-      from:   "packages/",
-      to:     "packages/",
-      filter: ["**/*.json"],
+      from: "dist",
+      to: "dist",
+      filter: ["**/*"]
     },
+    {
+      from: "packages",
+      to: "packages",
+      filter: ["**/*.json"]
+    },
+    {
+      from: ".",
+      to: ".",
+      filter: ["package.json"]
+    }
   ],
 
   publish: {
-    provider:    "github",
+    provider: "github",
     releaseType: "release",
-    owner:       "aeolus9093",
-    repo:        "MCP_STORE",
+    owner: "aeolus9093",
+    repo: "MCP_STORE",
   },
 
   win: {
     target: [
-      { target: "nsis",     arch: ["x64"] },
+      { target: "nsis", arch: ["x64"] },
       { target: "portable", arch: ["x64"] },
     ],
   },
@@ -43,10 +45,10 @@ const config = {
   nsis: {
     oneClick: false,
     allowToChangeInstallationDirectory: true,
-    createDesktopShortcut:   true,
+    createDesktopShortcut: true,
     createStartMenuShortcut: true,
-    shortcutName:            "MCP Store",
-    language:                "1042",
+    shortcutName: "MCP Store",
+    language: "1042",
   },
 
   mac: {
@@ -68,11 +70,11 @@ const config = {
     category: "Development",
     target: [
       { target: "AppImage", arch: ["x64"] },
-      { target: "deb",      arch: ["x64"] },
+      { target: "deb", arch: ["x64"] },
     ],
     desktop: {
-      Name:       "MCP Store",
-      Comment:    "One-click MCP installer for AI clients",
+      Name: "MCP Store",
+      Comment: "One-click MCP installer for AI clients",
       Categories: "Development;Utility;",
     },
   },
