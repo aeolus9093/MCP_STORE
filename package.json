@@ -27,7 +27,10 @@
     "electron",
     "installer"
   ],
-  "author": "",
+  "author": {
+    "name": "aeolus9093",
+    "email": "91409125+aeolus9093@users.noreply.github.com"
+  },
   "license": "MIT",
   "dependencies": {
     "electron-updater": "^6.8.3",
