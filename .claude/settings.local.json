@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(node -e \"const r=require\\(''./packages/registry.json''\\); console.log\\(''총 MCP 수:'', r.length\\);\")",
-      "Bash(xargs wc:*)",
-      "Bash(node -e \":*)"
-    ]
-  }
-}
