@@ -41,12 +41,10 @@ const config: Configuration = {
   },
 
   // ── 포함/제외 파일 ─────────────────────────────────────────
+  // **/* 베이스로 전체 포함 후 불필요한 항목만 제외
+  // (dist/** 만 명시하면 electron-builder가 entry file을 asar에 누락시키는 문제 발생)
   files: [
-    // 빌드 결과물 (Main + Renderer)
-    "dist/**",
-    // MCP 레지스트리 데이터
-    "packages/**",
-    // 제외: 소스 파일, 개발 전용 파일
+    "**/*",
     "!src/**",
     "!**/*.ts",
     "!**/*.tsx",
@@ -54,6 +52,18 @@ const config: Configuration = {
     "!node_modules/.cache/**",
     "!release/**",
     "!.github/**",
+    "!*.config.ts",
+    "!*.config.js",
+    "!vite.config.*",
+    "!tailwind.config.*",
+    "!postcss.config.*",
+    "!tsconfig*.json",
+    "!index.html",
+    "!.gitignore",
+    "!CONTRIBUTING.md",
+    "!LLM_GUIDE.md",
+    "!mcp-store_ARCHIVE.md",
+    "!README.md",
   ],
 
   // 추가 리소스 (실행 시 app.getPath('resources') 하위에 복사)
