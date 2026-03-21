@@ -11,6 +11,7 @@ import {
   RemoveMCPPayload,
   ToggleMCPPayload,
   Review,
+  AppSettings,
 } from "../shared/types";
 
 // ──────────────────────────────────────────────
@@ -88,5 +89,35 @@ contextBridge.exposeInMainWorld("mcpStore", {
   // 이벤트 리스너 제거
   offUpdateStatus: () => {
     ipcRenderer.removeAllListeners(IPC.UPDATE_STATUS);
+  },
+
+  // ── Phase 5 — Auto Sync ───────────────────────
+
+  // Settings 읽기/쓰기
+  getSettings:   ()                          => ipcRenderer.invoke(IPC.SETTINGS_GET),
+  setSettings:   (s: AppSettings)            => ipcRenderer.invoke(IPC.SETTINGS_SET, s),
+
+  // 메타데이터 갱신 / 캐시 조회
+  refreshMetadata:    ()                     => ipcRenderer.invoke(IPC.METADATA_REFRESH),
+  getMetadataCache:   ()                     => ipcRenderer.invoke(IPC.METADATA_CACHE_GET),
+
+  // LLM 설명 생성 / 캐시 조회
+  generateDescription: (packageId: string)  => ipcRenderer.invoke(IPC.DESCRIPTION_GENERATE, packageId),
+  getDescriptionCache: ()                    => ipcRenderer.invoke(IPC.DESCRIPTION_CACHE_GET),
+
+  // 설정 파일 변경 이벤트 수신 (main → renderer)
+  onConfigChanged: (cb: (payload: { client: string; added: string[]; removed: string[] }) => void) => {
+    ipcRenderer.on(IPC.CONFIG_CHANGED, (_e, payload) => cb(payload));
+  },
+  offConfigChanged: () => {
+    ipcRenderer.removeAllListeners(IPC.CONFIG_CHANGED);
+  },
+
+  // 신규 MCP 감지 이벤트 수신 (main → renderer)
+  onNewMcpDetected: (cb: (payload: { newPackageNames: string[]; totalInRepo: number }) => void) => {
+    ipcRenderer.on(IPC.NEW_MCP_DETECTED, (_e, payload) => cb(payload));
+  },
+  offNewMcpDetected: () => {
+    ipcRenderer.removeAllListeners(IPC.NEW_MCP_DETECTED);
   },
 });

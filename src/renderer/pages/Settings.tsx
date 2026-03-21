@@ -1,9 +1,10 @@
 // =============================================================
-// renderer/pages/Settings.tsx — 설정 / 백업 / Phase 3 추가
-// GitHub 동기화 + 커뮤니티 MCP 제출 시스템 추가
+// renderer/pages/Settings.tsx — 설정 / 백업 / Phase 5 확장
+// Claude API Key 입력 + Auto Sync 토글 + GitHub 동기화 섹션
 // =============================================================
 
 import { useState, useEffect } from "react";
+import { AppSettings } from "../../shared/types";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -65,16 +66,59 @@ export default function Settings() {
   const [syncMsg,      setSyncMsg]      = useState("");
   const [lastSyncedAt, setLastSyncedAt] = useState<string>("");
 
-  // 앱 시작 시 동기화 캐시 로드
+  // Phase 5: Settings 상태
+  const [apiKey,           setApiKey]           = useState("");
+  const [apiKeyVisible,    setApiKeyVisible]     = useState(false);
+  const [autoSyncEnabled,  setAutoSyncEnabled]  = useState(true);
+  const [settingsStatus,   setSettingsStatus]   = useState<Status>("idle");
+  const [settingsMsg,      setSettingsMsg]      = useState("");
+
+  // Phase 5: 메타데이터 갱신 상태
+  const [metaStatus, setMetaStatus] = useState<Status>("idle");
+  const [metaMsg,    setMetaMsg]    = useState("");
+
+  // 앱 시작 시 settings + 동기화 캐시 로드
   useEffect(() => {
     if (!window.mcpStore) return;
     (async () => {
-      const result = await window.mcpStore!.githubSyncCache();
-      if (result.success && result.data?.lastSyncedAt) {
-        setLastSyncedAt(result.data.lastSyncedAt);
-      }
+      try {
+        const [cacheResult, settingsResult] = await Promise.all([
+          window.mcpStore!.githubSyncCache(),
+          window.mcpStore!.getSettings(),
+        ]);
+        if (cacheResult.success && cacheResult.data?.lastSyncedAt) {
+          setLastSyncedAt(cacheResult.data.lastSyncedAt);
+        }
+        if (settingsResult.success && settingsResult.data) {
+          const s = settingsResult.data as AppSettings;
+          setApiKey(s.claudeApiKey ?? "");
+          setAutoSyncEnabled(s.autoSyncEnabled ?? true);
+        }
+      } catch {}
     })();
   }, []);
+
+  const handleSaveSettings = async () => {
+    if (!window.mcpStore) return;
+    setSettingsStatus("loading");
+    try {
+      const result = await window.mcpStore.setSettings({
+        claudeApiKey:    apiKey.trim(),
+        autoSyncEnabled,
+      } as AppSettings);
+      if (result.success) {
+        setSettingsStatus("success");
+        setSettingsMsg("설정이 저장되었습니다.");
+      } else {
+        setSettingsStatus("error");
+        setSettingsMsg(result.error ?? "저장 실패");
+      }
+    } catch (err) {
+      setSettingsStatus("error");
+      setSettingsMsg((err as Error).message);
+    }
+    setTimeout(() => { setSettingsStatus("idle"); setSettingsMsg(""); }, 3000);
+  };
 
   const handleExport = async () => {
     if (!window.mcpStore) return;
@@ -159,8 +203,28 @@ export default function Settings() {
     setTimeout(() => { setSyncStatus("idle"); setSyncMsg(""); }, 5000);
   };
 
+  const handleMetadataRefresh = async () => {
+    if (!window.mcpStore) return;
+    setMetaStatus("loading");
+    setMetaMsg("");
+    try {
+      const result = await window.mcpStore.refreshMetadata();
+      if (result.success) {
+        const count = Object.keys((result.data as Record<string, unknown>) ?? {}).length;
+        setMetaStatus("success");
+        setMetaMsg(`${count}개 MCP 메타데이터 갱신 완료`);
+      } else {
+        setMetaStatus("error");
+        setMetaMsg(result.error ?? "갱신 실패");
+      }
+    } catch (err) {
+      setMetaStatus("error");
+      setMetaMsg((err as Error).message);
+    }
+    setTimeout(() => { setMetaStatus("idle"); setMetaMsg(""); }, 4000);
+  };
+
   const handleSubmitMCP = () => {
-    // GitHub PR 템플릿 URL 열기
     const prUrl =
       "https://github.com/modelcontextprotocol/servers/issues/new?template=new-server.yml";
     window.open(prUrl, "_blank", "noreferrer");
@@ -176,12 +240,114 @@ export default function Settings() {
         </p>
       </div>
 
+      {/* Phase 5: Claude API Key 섹션 */}
+      <section>
+        <h3 className="text-base font-semibold mb-3" style={{ color: "#cbd5e1" }}>
+          Claude API 설정
+        </h3>
+        <div
+          className="rounded-2xl p-5 space-y-4"
+          style={{ background: "#141720", border: "1px solid #1f2535" }}
+        >
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "#94a3b8" }}>
+              API Key
+            </label>
+            <p className="text-xs mb-2" style={{ color: "#475569" }}>
+              신규 MCP README 자동 요약에 사용됩니다. 선택 사항이며
+              <code className="mx-1 px-1 rounded" style={{ background: "#0a0c14", color: "#60a5fa" }}>
+                ~/.mcp-store/settings.json
+              </code>
+              에 저장됩니다.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type={apiKeyVisible ? "text" : "password"}
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="sk-ant-..."
+                className="flex-1 px-3 py-2 rounded-xl text-sm font-mono"
+                style={{
+                  background:  "#0a0c14",
+                  border:      "1px solid #1f2535",
+                  color:       "#f1f5f9",
+                  outline:     "none",
+                }}
+              />
+              <button
+                onClick={() => setApiKeyVisible((v) => !v)}
+                className="px-3 py-2 rounded-xl text-sm"
+                style={{
+                  background: "#1f2535",
+                  color:      "#94a3b8",
+                  cursor:     "pointer",
+                }}
+              >
+                {apiKeyVisible ? "숨기기" : "보기"}
+              </button>
+            </div>
+          </div>
+
+          {/* Auto Sync 토글 */}
+          <div className="flex items-center justify-between pt-1">
+            <div>
+              <p className="text-sm font-medium" style={{ color: "#94a3b8" }}>
+                Auto Sync (6시간 주기)
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "#475569" }}>
+                앱 시작 시 + 6시간마다 modelcontextprotocol/servers를 자동 폴링합니다.
+              </p>
+            </div>
+            <button
+              onClick={() => setAutoSyncEnabled((v) => !v)}
+              className="shrink-0 w-11 h-6 rounded-full relative transition-colors"
+              style={{
+                background: autoSyncEnabled ? "#2563eb" : "#1f2535",
+                cursor: "pointer",
+              }}
+              aria-label="Auto Sync 토글"
+            >
+              <span
+                className="absolute top-0.5 w-5 h-5 rounded-full transition-transform"
+                style={{
+                  background: autoSyncEnabled ? "#fff" : "#64748b",
+                  transform:  autoSyncEnabled ? "translateX(22px)" : "translateX(2px)",
+                }}
+              />
+            </button>
+          </div>
+
+          {/* 저장 버튼 */}
+          <div className="flex items-center gap-3 pt-1">
+            <button
+              onClick={handleSaveSettings}
+              disabled={settingsStatus === "loading"}
+              className="px-5 py-2 rounded-xl text-sm font-semibold"
+              style={{
+                background: settingsStatus === "loading" ? "#1f2535" : "#2563eb",
+                color:      settingsStatus === "loading" ? "#475569" : "#fff",
+                cursor:     settingsStatus === "loading" ? "not-allowed" : "pointer",
+              }}
+            >
+              {settingsStatus === "loading" ? "저장 중…" : "저장"}
+            </button>
+            {settingsStatus === "success" && (
+              <span className="text-xs" style={{ color: "#34d399" }}>✓ {settingsMsg}</span>
+            )}
+            {settingsStatus === "error" && (
+              <span className="text-xs" style={{ color: "#f87171" }}>{settingsMsg}</span>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* GitHub 동기화 섹션 */}
       <section>
         <h3 className="text-base font-semibold mb-3" style={{ color: "#cbd5e1" }}>
           GitHub 동기화
         </h3>
         <div className="space-y-3">
+          {/* 레지스트리 동기화 */}
           <div
             className="rounded-2xl p-5 flex items-start gap-4"
             style={{ background: "#141720", border: "1px solid #1f2535" }}
@@ -191,6 +357,7 @@ export default function Settings() {
               <p className="font-semibold mb-1" style={{ color: "#f1f5f9" }}>레지스트리 동기화</p>
               <p className="text-sm" style={{ color: "#64748b" }}>
                 modelcontextprotocol/servers 저장소를 폴링해서 신규 MCP를 감지합니다.
+                ETag Conditional Request로 API rate limit을 절약합니다.
               </p>
               {lastSyncedAt && (
                 <p className="text-xs mt-1" style={{ color: "#475569" }}>
@@ -215,6 +382,38 @@ export default function Settings() {
               }}
             >
               {syncStatus === "loading" ? "동기화 중…" : "동기화"}
+            </button>
+          </div>
+
+          {/* 메타데이터 갱신 */}
+          <div
+            className="rounded-2xl p-5 flex items-start gap-4"
+            style={{ background: "#141720", border: "1px solid #1f2535" }}
+          >
+            <span className="text-2xl shrink-0">⭐</span>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold mb-1" style={{ color: "#f1f5f9" }}>설치 MCP 메타데이터 갱신</p>
+              <p className="text-sm" style={{ color: "#64748b" }}>
+                설치된 MCP의 GitHub stars와 마지막 업데이트를 최신 정보로 갱신합니다.
+              </p>
+              {metaStatus === "success" && metaMsg && (
+                <p className="text-xs mt-2" style={{ color: "#34d399" }}>✓ {metaMsg}</p>
+              )}
+              {metaStatus === "error" && metaMsg && (
+                <p className="text-xs mt-2" style={{ color: "#f87171" }}>{metaMsg}</p>
+              )}
+            </div>
+            <button
+              onClick={handleMetadataRefresh}
+              disabled={metaStatus === "loading"}
+              className="shrink-0 px-4 py-2 rounded-xl text-sm font-semibold"
+              style={{
+                background: metaStatus === "loading" ? "#1f2535" : "#2563eb",
+                color:      metaStatus === "loading" ? "#475569" : "#fff",
+                cursor:     metaStatus === "loading" ? "not-allowed" : "pointer",
+              }}
+            >
+              {metaStatus === "loading" ? "갱신 중…" : "갱신"}
             </button>
           </div>
         </div>
@@ -287,10 +486,16 @@ export default function Settings() {
             설치 목록: <span style={{ color: "#94a3b8" }}>~/.mcp-store/installed.json</span>
           </p>
           <p className="text-xs font-mono" style={{ color: "#64748b" }}>
-            검색 히스토리: <span style={{ color: "#94a3b8" }}>~/.mcp-store/search-history.json</span>
+            앱 설정: <span style={{ color: "#94a3b8" }}>~/.mcp-store/settings.json</span>
           </p>
           <p className="text-xs font-mono" style={{ color: "#64748b" }}>
-            리뷰/별점: <span style={{ color: "#94a3b8" }}>~/.mcp-store/reviews.json</span>
+            생성된 설명: <span style={{ color: "#94a3b8" }}>~/.mcp-store/generated-descriptions.json</span>
+          </p>
+          <p className="text-xs font-mono" style={{ color: "#64748b" }}>
+            메타데이터: <span style={{ color: "#94a3b8" }}>~/.mcp-store/metadata-cache.json</span>
+          </p>
+          <p className="text-xs font-mono" style={{ color: "#64748b" }}>
+            검색 히스토리: <span style={{ color: "#94a3b8" }}>~/.mcp-store/search-history.json</span>
           </p>
           <p className="text-xs font-mono" style={{ color: "#64748b" }}>
             GitHub 캐시: <span style={{ color: "#94a3b8" }}>~/.mcp-store/sync-cache.json</span>
@@ -313,7 +518,7 @@ export default function Settings() {
         >
           <div className="flex justify-between text-sm">
             <span style={{ color: "#64748b" }}>버전</span>
-            <span style={{ color: "#94a3b8" }}>v0.3.0 Phase 3</span>
+            <span style={{ color: "#94a3b8" }}>v0.5.0 Phase 5</span>
           </div>
           <div className="flex justify-between text-sm">
             <span style={{ color: "#64748b" }}>MCP 목록</span>
@@ -324,8 +529,8 @@ export default function Settings() {
             <span style={{ color: "#94a3b8" }}>Claude Desktop, Cursor, Windsurf, Claude Code, VS Code, Zed</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span style={{ color: "#64748b" }}>Phase 3 기능</span>
-            <span style={{ color: "#60a5fa" }}>GitHub 동기화, README, 리뷰, 품질 점수</span>
+            <span style={{ color: "#64748b" }}>Phase 5 기능</span>
+            <span style={{ color: "#60a5fa" }}>Auto Sync, LLM 설명 생성, Config Watcher, 메타데이터 갱신</span>
           </div>
         </div>
       </section>

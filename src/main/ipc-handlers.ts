@@ -17,7 +17,13 @@ import {
   SearchPayload,
   IPCResult,
   ClientConfigMap,
+  AppSettings,
+  MetadataCache,
 } from "../shared/types";
+import {
+  refreshMetadataForPackages,
+  getMetadataCache,
+} from "./github-sync";
 import { getAllPackages, searchPackages, getPackageById, clearCache } from "./registry";
 import { installMCP, checkToolAvailability } from "./installer";
 import {
@@ -37,7 +43,8 @@ interface DBSchema {
   installed: InstalledMCP[];
 }
 
-const DB_PATH = path.join(os.homedir(), ".mcp-store", "installed.json");
+const DB_PATH       = path.join(os.homedir(), ".mcp-store", "installed.json");
+const SETTINGS_PATH = path.join(os.homedir(), ".mcp-store", "settings.json");
 
 /**
  * readDB — DB 파일 읽기. 없으면 기본값 반환.
@@ -254,6 +261,65 @@ export function registerIpcHandlers(win: BrowserWindow): void {
       if (item) item.isActive = payload.isActive;
       writeDB(db);
       return toggleMcpServer(payload.client, payload.packageId, payload.isActive);
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  });
+
+  // ── Phase 5: Settings ────────────────────────
+
+  ipcMain.handle(IPC.SETTINGS_GET, (): IPCResult<AppSettings> => {
+    try {
+      if (!fs.existsSync(SETTINGS_PATH)) {
+        return { success: true, data: { claudeApiKey: "", autoSyncEnabled: true } };
+      }
+      const raw = JSON.parse(fs.readFileSync(SETTINGS_PATH, "utf-8")) as Partial<AppSettings>;
+      return {
+        success: true,
+        data: {
+          claudeApiKey:    raw.claudeApiKey    ?? "",
+          autoSyncEnabled: raw.autoSyncEnabled ?? true,
+        },
+      };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  });
+
+  ipcMain.handle(IPC.SETTINGS_SET, (_e, settings: AppSettings): IPCResult => {
+    try {
+      const dir = path.dirname(SETTINGS_PATH);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2), "utf-8");
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  });
+
+  // ── Phase 5: 메타데이터 갱신 ─────────────────
+
+  ipcMain.handle(
+    IPC.METADATA_REFRESH,
+    async (): Promise<IPCResult<MetadataCache>> => {
+      try {
+        const db       = readDB();
+        const packages = getAllPackages();
+        // 설치된 패키지만 메타데이터 갱신
+        const installedIds = [...new Set(db.installed.map((i) => i.packageId))];
+        const targets = packages
+          .filter((p) => installedIds.includes(p.id))
+          .map((p) => ({ id: p.id, officialSource: p.officialSource }));
+        return await refreshMetadataForPackages(targets);
+      } catch (err) {
+        return { success: false, error: (err as Error).message };
+      }
+    }
+  );
+
+  ipcMain.handle(IPC.METADATA_CACHE_GET, (): IPCResult<MetadataCache> => {
+    try {
+      return { success: true, data: getMetadataCache() };
     } catch (err) {
       return { success: false, error: (err as Error).message };
     }

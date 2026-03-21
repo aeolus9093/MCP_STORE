@@ -7,11 +7,7 @@
 
 ## 스크린샷
 
-<!-- 스크린샷 placeholder — 실제 스크린샷으로 교체하세요 -->
-
-| 스토어 홈 | 상세 페이지 | 설치된 MCP |
-|:---------:|:-----------:|:----------:|
-| ![Home](docs/screenshots/home.png) | ![Detail](docs/screenshots/detail.png) | ![Installed](docs/screenshots/installed.png) |
+> 📸 스크린샷은 첫 릴리즈 이후 추가될 예정입니다.
 
 ---
 
@@ -34,18 +30,18 @@
 
 ### Windows
 
-1. [Releases 페이지](https://github.com/your-username/mcp-store/releases)에서 최신 버전의 `.exe` 다운로드
+1. [Releases 페이지](https://github.com/aeolus9093/MCP_STORE/releases)에서 최신 버전의 `.exe` 다운로드
 2. `MCP-Store-Setup-x.x.x.exe` 실행 후 설치 안내 따르기
 3. 또는 `MCP-Store-x.x.x-portable.exe` — 설치 없이 바로 실행
 
 ### macOS
 
-1. [Releases 페이지](https://github.com/your-username/mcp-store/releases)에서 `.dmg` 다운로드
+1. [Releases 페이지](https://github.com/aeolus9093/MCP_STORE/releases)에서 `.dmg` 다운로드
 2. DMG 마운트 후 `MCP Store.app`을 `/Applications`으로 드래그
 
 ### Linux
 
-1. [Releases 페이지](https://github.com/your-username/mcp-store/releases)에서 `.AppImage` 또는 `.deb` 다운로드
+1. [Releases 페이지](https://github.com/aeolus9093/MCP_STORE/releases)에서 `.AppImage` 또는 `.deb` 다운로드
 2. AppImage: `chmod +x MCP-Store-*.AppImage && ./MCP-Store-*.AppImage`
 3. deb: `sudo dpkg -i mcp-store_*.deb`
 
@@ -143,7 +139,7 @@ mcp-store/
 
 ### MCP 제출
 
-새 MCP를 스토어에 추가하려면 [GitHub Issue 템플릿](https://github.com/your-username/mcp-store/issues/new?template=submit-mcp.md)을 사용하거나, `packages/registry.json`에 직접 추가 후 PR을 보내세요.
+새 MCP를 스토어에 추가하려면 [GitHub Issue 템플릿](https://github.com/aeolus9093/MCP_STORE/issues/new?template=submit-mcp.md)을 사용하거나, `packages/registry.json`에 직접 추가 후 PR을 보내세요.
 
 ---
 

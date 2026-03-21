@@ -3,10 +3,15 @@
 // =============================================================
 
 import { app, BrowserWindow, shell } from "electron";
+import * as fs   from "fs";
 import * as path from "path";
+import * as os   from "os";
 import { initDB, registerIpcHandlers }        from "./ipc-handlers";
 import { registerCommunityHandlers }           from "./ipc-handlers-community";
 import { registerAutoUpdaterHandlers, scheduleUpdateCheck } from "./auto-updater";
+import { startAutoSync, stopAutoSync }         from "./github-sync";
+import { startConfigWatcher, stopConfigWatcher } from "./config-watcher";
+import { getAllPackages }                       from "./registry";
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -50,6 +55,26 @@ async function createWindow(): Promise<void> {
   registerCommunityHandlers();
   registerAutoUpdaterHandlers(mainWindow);
   scheduleUpdateCheck();
+
+  // Phase 5: Auto Sync — autoSyncEnabled 확인 후 시작
+  const settingsPath = path.join(os.homedir(), ".mcp-store", "settings.json");
+  let autoSyncEnabled = true;
+  try {
+    if (fs.existsSync(settingsPath)) {
+      const s = JSON.parse(fs.readFileSync(settingsPath, "utf-8")) as { autoSyncEnabled?: boolean };
+      autoSyncEnabled = s.autoSyncEnabled ?? true;
+    }
+  } catch {}
+
+  if (autoSyncEnabled) {
+    startAutoSync(
+      mainWindow,
+      () => getAllPackages().map((p) => p.id)
+    );
+  }
+
+  // Phase 5: Config Watcher
+  startConfigWatcher(mainWindow);
 }
 
 app.whenReady().then(async () => {
@@ -66,5 +91,7 @@ app.whenReady().then(async () => {
 });
 
 app.on("window-all-closed", () => {
+  stopAutoSync();
+  stopConfigWatcher();
   if (process.platform !== "darwin") app.quit();
 });

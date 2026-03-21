@@ -26,6 +26,10 @@ import {
   computeBatchQualityScores,
 } from "./quality-scorer";
 import { getAllPackages, getPackageById } from "./registry";
+import {
+  generateDescription,
+  getAllGeneratedDescriptions,
+} from "./description-generator";
 
 // ──────────────────────────────────────────────
 // 검색 히스토리 (로컬 JSON)
@@ -167,6 +171,39 @@ export function registerCommunityHandlers(): void {
       try {
         const packages = getAllPackages();
         return { success: true, data: computeBatchQualityScores(packages) };
+      } catch (err) {
+        return { success: false, error: (err as Error).message };
+      }
+    }
+  );
+
+  // ── Phase 5: LLM 설명 자동 생성 ──────────────
+
+  ipcMain.handle(
+    IPC.DESCRIPTION_GENERATE,
+    async (_e, packageId: string): Promise<IPCResult<string>> => {
+      try {
+        const pkg = getPackageById(packageId);
+        if (!pkg) return { success: false, error: "패키지를 찾을 수 없습니다." };
+
+        // README fetch
+        const readmeResult = await fetchReadme(pkg.officialSource);
+        const readmeContent = readmeResult.success && readmeResult.data
+          ? readmeResult.data
+          : pkg.description; // README fetch 실패 시 기존 설명으로 대체
+
+        return await generateDescription(packageId, readmeContent);
+      } catch (err) {
+        return { success: false, error: (err as Error).message };
+      }
+    }
+  );
+
+  ipcMain.handle(
+    IPC.DESCRIPTION_CACHE_GET,
+    (): IPCResult<Record<string, { description: string; generatedAt: string }>> => {
+      try {
+        return { success: true, data: getAllGeneratedDescriptions() };
       } catch (err) {
         return { success: false, error: (err as Error).message };
       }
