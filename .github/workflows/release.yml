@@ -1,16 +1,14 @@
 name: Release
 
-# v* 태그 push 시 자동 빌드/릴리즈
-# 예: git tag v0.4.0 && git push origin v0.4.0
 on:
   push:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+
 jobs:
-  # ────────────────────────────────────────────
-  # Windows 빌드 (x64 NSIS 인스톨러 + 포터블)
-  # ────────────────────────────────────────────
   build-win:
     name: Build / Windows
     runs-on: windows-latest
@@ -20,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies
@@ -30,9 +28,6 @@ jobs:
         run: npm run build:win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # 코드 사이닝 (선택 — GitHub Secrets에 등록 시 활성화)
-          # CSC_LINK:         ${{ secrets.WIN_CSC_LINK }}
-          # CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -40,9 +35,6 @@ jobs:
           name: release-win
           path: release/*.exe
 
-  # ────────────────────────────────────────────
-  # macOS 빌드 (DMG + pkg, arm64 + x64)
-  # ────────────────────────────────────────────
   build-mac:
     name: Build / macOS
     runs-on: macos-latest
@@ -52,7 +44,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies
@@ -62,12 +54,6 @@ jobs:
         run: npm run build:mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # 코드 사이닝 + 노터리제이션 (선택 — GitHub Secrets에 등록 시 활성화)
-          # CSC_LINK:                      ${{ secrets.MAC_CSC_LINK }}
-          # CSC_KEY_PASSWORD:              ${{ secrets.MAC_CSC_KEY_PASSWORD }}
-          # APPLE_ID:                      ${{ secrets.APPLE_ID }}
-          # APPLE_APP_SPECIFIC_PASSWORD:   ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          # APPLE_TEAM_ID:                 ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -77,9 +63,6 @@ jobs:
             release/*.dmg
             release/*.pkg
 
-  # ────────────────────────────────────────────
-  # Linux 빌드 (AppImage + deb)
-  # ────────────────────────────────────────────
   build-linux:
     name: Build / Linux
     runs-on: ubuntu-latest
@@ -89,7 +72,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies
@@ -113,15 +96,10 @@ jobs:
             release/*.AppImage
             release/*.deb
 
-  # ────────────────────────────────────────────
-  # GitHub Release 생성 + 파일 첨부
-  # ────────────────────────────────────────────
   release:
     name: Create GitHub Release
     needs: [build-win, build-mac, build-linux]
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
