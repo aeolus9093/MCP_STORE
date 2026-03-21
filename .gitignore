@@ -4,3 +4,6 @@ dist-electron/
 release/
 .env
 *.log
+
+# Claude Code 로컬 설정 (개인정보/토큰 포함 가능)
+.claude/settings.local.json
