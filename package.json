@@ -19,7 +19,8 @@
     "build:linux": "npm run build && electron-builder --linux --config electron-builder.config.js",
     "build:all": "npm run build && electron-builder --win --mac --linux --config electron-builder.config.js",
     "dist": "npm run build && electron-builder --config electron-builder.config.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "collect": "tsc -p tsconfig.scripts.json && node dist-scripts/collect-mcps.js"
   },
   "keywords": [
     "mcp",

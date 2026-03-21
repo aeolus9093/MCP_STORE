@@ -3,7 +3,7 @@
 // GitHub 동기화 / README fetch / 검색 히스토리 / 리뷰 / 품질 점수
 // =============================================================
 
-import { ipcMain }      from "electron";
+import { ipcMain, BrowserWindow } from "electron";
 import * as fs          from "fs";
 import * as path        from "path";
 import * as os          from "os";
@@ -13,6 +13,7 @@ import {
   IPCResult,
   GitHubSyncResult,
   QualityScore,
+  CollectionStatus,
 } from "../shared/types";
 import { syncWithGitHub, getSyncCache } from "./github-sync";
 import { fetchReadme }                  from "./readme-fetcher";
@@ -25,11 +26,18 @@ import {
   computeQualityScore,
   computeBatchQualityScores,
 } from "./quality-scorer";
-import { getAllPackages, getPackageById } from "./registry";
+import { getAllPackages, getPackageById, clearCache } from "./registry";
 import {
   generateDescription,
   getAllGeneratedDescriptions,
 } from "./description-generator";
+import {
+  collectFromOfficialRepo,
+  collectFromNPM,
+  collectFromAwesomeList,
+  normalizeToMCPPackage,
+  mergeIntoRegistry,
+} from "./mcp-collector";
 
 // ──────────────────────────────────────────────
 // 검색 히스토리 (로컬 JSON)
@@ -205,6 +213,71 @@ export function registerCommunityHandlers(): void {
       try {
         return { success: true, data: getAllGeneratedDescriptions() };
       } catch (err) {
+        return { success: false, error: (err as Error).message };
+      }
+    }
+  );
+
+  // ── Phase 5: Registry 자동 수집 ───────────────
+
+  ipcMain.handle(
+    IPC.REGISTRY_COLLECT,
+    async (_e, options: { generateDescriptions: boolean }): Promise<IPCResult<CollectionStatus>> => {
+      const win = BrowserWindow.getFocusedWindow();
+
+      function sendStatus(status: CollectionStatus): void {
+        if (win && !win.isDestroyed()) {
+          win.webContents.send(IPC.REGISTRY_COLLECT_STATUS, status);
+        }
+      }
+
+      try {
+        sendStatus({ phase: "collecting", found: 0, newItems: 0, updated: 0, message: "소스에서 MCP 수집 중..." });
+
+        const allRaw = [];
+        try {
+          const official = await collectFromOfficialRepo();
+          allRaw.push(...official);
+        } catch (e) { console.warn("[registry-collect] official 실패:", (e as Error).message); }
+
+        try {
+          const npm = await collectFromNPM();
+          allRaw.push(...npm);
+        } catch (e) { console.warn("[registry-collect] NPM 실패:", (e as Error).message); }
+
+        try {
+          const awesome = await collectFromAwesomeList();
+          allRaw.push(...awesome);
+        } catch (e) { console.warn("[registry-collect] awesome 실패:", (e as Error).message); }
+
+        sendStatus({ phase: "merging", found: allRaw.length, newItems: 0, updated: 0, message: "데이터 병합 중..." });
+
+        const normalized = allRaw.map(normalizeToMCPPackage);
+        const existing = getAllPackages();
+        const { merged, addedCount, updatedCount } = mergeIntoRegistry(existing, normalized);
+
+        // registry.json 업데이트
+        const registryPath = path.resolve(__dirname, "../../../packages/registry.json");
+        fs.writeFileSync(registryPath, JSON.stringify(merged, null, 2), "utf-8");
+
+        // 캐시 초기화 후 재로드
+        clearCache();
+
+        const finalStatus: CollectionStatus = {
+          phase:    "done",
+          found:    allRaw.length,
+          newItems: addedCount,
+          updated:  updatedCount,
+          message:  `완료: 신규 ${addedCount}개, 업데이트 ${updatedCount}개`,
+        };
+        sendStatus(finalStatus);
+        return { success: true, data: finalStatus };
+      } catch (err) {
+        const errorStatus: CollectionStatus = {
+          phase: "error", found: 0, newItems: 0, updated: 0,
+          message: (err as Error).message,
+        };
+        sendStatus(errorStatus);
         return { success: false, error: (err as Error).message };
       }
     }
