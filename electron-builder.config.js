@@ -9,23 +9,10 @@ const config = {
     output: "release",
   },
 
-  // object 형태로 명시적 경로 지정 — **/* glob 이슈 우회
   files: [
-    {
-      from: "dist",
-      to: "dist",
-      filter: ["**/*"]
-    },
-    {
-      from: "packages",
-      to: "packages",
-      filter: ["**/*.json"]
-    },
-    {
-      from: ".",
-      to: ".",
-      filter: ["package.json"]
-    }
+    "dist/**/*",
+    "packages/**/*.json",
+    "package.json"
   ],
 
   publish: {
