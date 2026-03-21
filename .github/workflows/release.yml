@@ -24,8 +24,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build & Package (Windows)
-        run: npm run build:win
+      - name: Build Vite
+        run: npm run build:vite
+
+      - name: Build Main (tsc)
+        run: npm run build:main
+
+      - name: Debug - List dist
+        run: |
+          echo "=== dist/ ==="
+          dir dist 2>&1 || echo "dist/ not found"
+          echo "=== dist/main/ ==="
+          dir dist\main 2>&1 || echo "dist/main/ not found"
+          echo "=== dist/main/main/ ==="
+          dir dist\main\main 2>&1 || echo "dist/main/main/ not found"
+
+      - name: Package (electron-builder Windows)
+        run: electron-builder --win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
