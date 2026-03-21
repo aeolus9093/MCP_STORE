@@ -31,11 +31,8 @@ const config: Configuration = {
   productName: "MCP Store",
 
   // ── 아이콘 ─────────────────────────────────────────────────
-  // 각 플랫폼별 아이콘은 build/ 디렉토리 하위에 위치
-  // 실제 아이콘 파일로 교체 시 이 경로를 사용하면 됩니다.
-  // - Windows : build/icon.ico  (256x256 권장)
-  // - macOS   : build/icon.icns (512x512 권장)
-  // - Linux   : build/icon.png  (512x512 권장)
+  // icon.png(512×512) 하나로 electron-builder가 ICO/ICNS 자동 변환
+  icon: "build/icon.png",
 
   // ── 빌드 리소스 & 출력 경로 ────────────────────────────────
   directories: {
@@ -95,9 +92,6 @@ const config: Configuration = {
   nsis: {
     oneClick:            false,  // 커스텀 설치 경로 허용
     allowToChangeInstallationDirectory: true,
-    installerIcon:       "build/icon.ico",
-    uninstallerIcon:     "build/icon.ico",
-    installerHeaderIcon: "build/icon.ico",
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
     shortcutName:        "MCP Store",
