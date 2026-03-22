@@ -15,9 +15,13 @@ const config = {
     "package.json"
   ],
 
-  // publish는 softprops/action-gh-release@v2 워크플로우가 처리
-  // electron-builder가 GH_TOKEN 없이 자동 publish 시도하는 것을 방지
-  publish: null,
+  // app-update.yml 생성을 위해 publish 설정 필요 (electron-updater가 사용)
+  // 실제 업로드는 --publish never 플래그로 차단, 릴리스는 softprops/action-gh-release@v2 처리
+  publish: {
+    provider: "github",
+    owner: "aeolus9093",
+    repo: "MCP_STORE",
+  },
 
   win: {
     target: [
