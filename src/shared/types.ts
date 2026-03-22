@@ -194,6 +194,10 @@ export const IPC = {
   DESCRIPTION_CACHE_GET:   "description:cacheGet",
   CONFIG_CHANGED:           "config:changed",     // main → renderer (event)
   NEW_MCP_DETECTED:         "newMcp:detected",    // main → renderer (event)
+
+  // ── Phase 5 — Registry Collect ────────────
+  REGISTRY_COLLECT:         "registry:collect",
+  REGISTRY_COLLECT_STATUS:  "registry:collectStatus",  // main → renderer (event)
 } as const;
 
 // ──────────────────────────────────────────────
@@ -250,3 +254,15 @@ export interface MetadataCacheEntry {
 }
 
 export type MetadataCache = Record<string, MetadataCacheEntry>;
+
+// ──────────────────────────────────────────────
+// Phase 5 — Registry Collect 상태
+// ──────────────────────────────────────────────
+
+export interface CollectionStatus {
+  phase: "idle" | "collecting" | "generating" | "merging" | "done" | "error";
+  found: number;
+  newItems: number;
+  updated: number;
+  message: string;
+}
