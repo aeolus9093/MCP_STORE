@@ -1,6 +1,6 @@
 {
   "name": "mcp-store",
-  "version": "0.4.0",
+  "version": "0.5.4",
   "description": "One-click MCP installer for AI clients",
   "main": "dist/main/index.js",
   "repository": {
@@ -20,7 +20,7 @@
     "build:all": "npm run build && electron-builder --win --mac --linux --config electron-builder.config.js",
     "dist": "npm run build && electron-builder --config electron-builder.config.js",
     "typecheck": "tsc --noEmit",
-    "collect": "tsc -p tsconfig.scripts.json && node dist-scripts/collect-mcps.js"
+    "collect": "tsc -p tsconfig.scripts.json && node dist-scripts/scripts/collect-mcps.js"
   },
   "keywords": [
     "mcp",
