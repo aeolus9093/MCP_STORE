@@ -18,7 +18,7 @@ import { MCPPackage, MCPCategory, Client, SearchPayload, SortOption } from "../s
 const REGISTRY_REMOTE_URL =
   "https://raw.githubusercontent.com/aeolus9093/MCP_STORE/main/packages/registry.json";
 const REGISTRY_CACHE_PATH = path.join(os.homedir(), ".mcp-store", "registry.json");
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24시간
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7일 (매주 첫 실행 시 갱신)
 
 // ──────────────────────────────────────────────
 // Zod 스키마
@@ -79,16 +79,22 @@ function getRegistryPath(): string {
 }
 
 /**
- * fetchAndUpdateRegistry — GitHub에서 최신 registry.json을 백그라운드로 fetch
- * - 캐시가 신선하면 생략
- * - 성공 시 로컬 캐시 갱신 + 메모리 캐시 초기화
+ * fetchAndUpdateRegistry — GitHub에서 최신 registry.json을 fetch
+ * - skipIfFresh=true(기본)면 캐시가 신선할 때 생략
+ * - onStatus 콜백으로 진행상황 실시간 전달
  * - 반환값: true = 업데이트됨, false = 생략/실패
  */
-export async function fetchAndUpdateRegistry(): Promise<boolean> {
-  if (isCacheFresh()) {
+export async function fetchAndUpdateRegistry(
+  options: { skipIfFresh?: boolean; onStatus?: (msg: string) => void } = {}
+): Promise<boolean> {
+  const { skipIfFresh = true, onStatus } = options;
+
+  if (skipIfFresh && isCacheFresh()) {
     console.log("[registry] 캐시 최신 상태, fetch 생략");
     return false;
   }
+
+  onStatus?.("GitHub에서 최신 MCP 목록 가져오는 중...");
 
   return new Promise((resolve) => {
     console.log("[registry] 원격 registry.json fetch 시작...");
@@ -130,7 +136,9 @@ export async function fetchAndUpdateRegistry(): Promise<boolean> {
           fs.writeFileSync(REGISTRY_CACHE_PATH, data, "utf-8");
 
           _cache = null; // 메모리 캐시 초기화
-          console.log("[registry] 원격 registry.json 업데이트 완료");
+          const count = (JSON.parse(data) as unknown[]).length;
+          console.log(`[registry] 원격 registry.json 업데이트 완료 (${count}개)`);
+          onStatus?.(`MCP 목록 업데이트 완료 (총 ${count}개)`);
           resolve(true);
         } catch (err) {
           console.warn("[registry] 데이터 처리 실패:", err);

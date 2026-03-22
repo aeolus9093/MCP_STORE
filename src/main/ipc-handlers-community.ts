@@ -14,6 +14,7 @@ import {
   GitHubSyncResult,
   QualityScore,
   CollectionStatus,
+  RegistryFetchStatus,
 } from "../shared/types";
 import { syncWithGitHub, getSyncCache } from "./github-sync";
 import { fetchReadme }                  from "./readme-fetcher";
@@ -26,7 +27,7 @@ import {
   computeQualityScore,
   computeBatchQualityScores,
 } from "./quality-scorer";
-import { getAllPackages, getPackageById, clearCache } from "./registry";
+import { getAllPackages, getPackageById, clearCache, fetchAndUpdateRegistry } from "./registry";
 import {
   generateDescription,
   getAllGeneratedDescriptions,
@@ -278,6 +279,53 @@ export function registerCommunityHandlers(): void {
           message: (err as Error).message,
         };
         sendStatus(errorStatus);
+        return { success: false, error: (err as Error).message };
+      }
+    }
+  );
+
+  // ── Phase 5: 수동 Registry Fetch ─────────────
+
+  ipcMain.handle(
+    IPC.REGISTRY_FETCH,
+    async (): Promise<IPCResult<RegistryFetchStatus>> => {
+      const win = BrowserWindow.getFocusedWindow();
+
+      function sendStatus(s: RegistryFetchStatus): void {
+        if (win && !win.isDestroyed()) {
+          win.webContents.send(IPC.REGISTRY_FETCH_STATUS, s);
+        }
+      }
+
+      sendStatus({ status: "fetching", message: "GitHub에서 최신 MCP 목록 가져오는 중..." });
+
+      try {
+        const updated = await fetchAndUpdateRegistry({
+          skipIfFresh: false, // 수동이므로 항상 fetch
+          onStatus: (msg) => sendStatus({ status: "fetching", message: msg }),
+        });
+
+        const packages = getAllPackages();
+        const result: RegistryFetchStatus = {
+          status: updated ? "done" : "skipped",
+          count:  packages.length,
+          message: updated
+            ? `업데이트 완료 — 총 ${packages.length}개 MCP`
+            : `이미 최신 상태 — 총 ${packages.length}개 MCP`,
+        };
+        sendStatus(result);
+
+        if (updated && win && !win.isDestroyed()) {
+          win.webContents.send(IPC.REGISTRY_UPDATED);
+        }
+
+        return { success: true, data: result };
+      } catch (err) {
+        const result: RegistryFetchStatus = {
+          status: "error",
+          message: (err as Error).message,
+        };
+        sendStatus(result);
         return { success: false, error: (err as Error).message };
       }
     }

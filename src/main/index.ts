@@ -12,7 +12,7 @@ import { registerAutoUpdaterHandlers, scheduleUpdateCheck } from "./auto-updater
 import { startAutoSync, stopAutoSync }         from "./github-sync";
 import { startConfigWatcher, stopConfigWatcher } from "./config-watcher";
 import { getAllPackages, fetchAndUpdateRegistry } from "./registry";
-import { IPC }                                  from "../shared/types";
+import { IPC, RegistryFetchStatus }             from "../shared/types";
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -78,14 +78,26 @@ async function createWindow(): Promise<void> {
   startConfigWatcher(mainWindow);
 
   // Phase 5: Registry 자동 업데이트 (백그라운드, 비차단)
-  // 24시간 이상 지난 경우 GitHub에서 최신 registry.json fetch
-  fetchAndUpdateRegistry().then((updated) => {
-    if (updated && mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.send(IPC.REGISTRY_UPDATED);
-      console.log("[main] renderer에 registry 업데이트 알림 전송");
+  // 7일 이상 지난 경우 GitHub에서 최신 registry.json fetch
+  const sendFetchStatus = (s: RegistryFetchStatus) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send(IPC.REGISTRY_FETCH_STATUS, s);
     }
+  };
+
+  fetchAndUpdateRegistry({
+    skipIfFresh: true,
+    onStatus: (msg) => sendFetchStatus({ status: "fetching", message: msg }),
+  }).then((updated) => {
+    if (!mainWindow || mainWindow.isDestroyed()) return;
+    if (updated) {
+      sendFetchStatus({ status: "done", message: "MCP 목록 업데이트 완료", count: getAllPackages().length });
+      mainWindow.webContents.send(IPC.REGISTRY_UPDATED);
+    }
+    // 최신 상태면 status 이벤트 없이 조용히 종료
   }).catch((err) => {
     console.warn("[main] registry 자동 업데이트 실패:", err);
+    sendFetchStatus({ status: "error", message: "MCP 목록 업데이트 실패" });
   });
 }
 

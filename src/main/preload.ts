@@ -129,4 +129,15 @@ contextBridge.exposeInMainWorld("mcpStore", {
   offRegistryUpdated: () => {
     ipcRenderer.removeAllListeners(IPC.REGISTRY_UPDATED);
   },
+
+  // 수동 registry fetch 요청
+  fetchRegistry: () => ipcRenderer.invoke(IPC.REGISTRY_FETCH),
+
+  // fetch 진행 상태 이벤트 (fetching | done | error | skipped)
+  onRegistryFetchStatus: (cb: (s: { status: string; count?: number; message: string }) => void) => {
+    ipcRenderer.on(IPC.REGISTRY_FETCH_STATUS, (_e, s) => cb(s));
+  },
+  offRegistryFetchStatus: () => {
+    ipcRenderer.removeAllListeners(IPC.REGISTRY_FETCH_STATUS);
+  },
 });

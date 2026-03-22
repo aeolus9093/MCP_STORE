@@ -112,6 +112,11 @@ declare global {
       // ── Phase 5 — Registry 자동 업데이트 ──────
       onRegistryUpdated:  (cb: () => void) => void;
       offRegistryUpdated: () => void;
+
+      // 수동 fetch + 진행 상태 이벤트
+      fetchRegistry: () => Promise<IPCResult<{ status: string; count?: number; message: string }>>;
+      onRegistryFetchStatus: (cb: (s: { status: string; count?: number; message: string }) => void) => void;
+      offRegistryFetchStatus: () => void;
     };
   }
 }

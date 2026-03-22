@@ -201,6 +201,8 @@ export const IPC = {
 
   // ── Phase 5 — Registry Auto-Update ────────
   REGISTRY_UPDATED:         "registry:updated",        // main → renderer (event)
+  REGISTRY_FETCH:           "registry:fetch",          // renderer → main (invoke, 수동 갱신)
+  REGISTRY_FETCH_STATUS:    "registry:fetchStatus",    // main → renderer (event, 진행상황)
 } as const;
 
 // ──────────────────────────────────────────────
@@ -267,5 +269,15 @@ export interface CollectionStatus {
   found: number;
   newItems: number;
   updated: number;
+  message: string;
+}
+
+// ──────────────────────────────────────────────
+// Phase 5 — Registry Fetch 상태
+// ──────────────────────────────────────────────
+
+export interface RegistryFetchStatus {
+  status: "fetching" | "done" | "error" | "skipped";
+  count?: number;   // 완료 시 총 MCP 수
   message: string;
 }
