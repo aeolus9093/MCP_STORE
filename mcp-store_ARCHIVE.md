@@ -18,6 +18,7 @@
 | 2026-03-21    | v0.3.0 | Phase 3 전체 구현. 하단 상세 참조. |
 | 2026-03-21    | v0.4.0 | Phase 4 배포 준비 전체 구현. 하단 상세 참조. |
 | 2026-03-21    | v0.4.0 | 배포 체크리스트 완료, GitHub push 완료. package.json/electron-builder.config.ts repository 설정 업데이트, .gitignore 생성, build/icon.svg 삭제, git init 및 origin push (aeolus9093/MCP_STORE), tag v0.4.0 생성. |
+| 2026-03-21    | v0.5.0 | Phase 5 Auto Sync 전체 구현. 하단 상세 참조. |
 
 ---
 
@@ -266,9 +267,51 @@ npm run dist
 
 ---
 
-## Phase 5 — Auto Sync (예정)
+## v0.5.0 구현 범위 (Phase 5 — Auto Sync)
 
-- [ ] GitHub API polling/webhooks으로 registry.json 자동 갱신 (새 MCP 자동 감지)
-- [ ] 설치된 MCP stars/lastUpdated 실시간 반영 (GitHub 메타데이터 주기적 동기화)
-- [ ] plainDescription LLM 자동 생성 (신규 MCP 등록 시 Claude API로 한국어 설명 자동 작성)
-- [ ] 클라이언트 설정 파일 변경 감지 (fs.watch) → 외부 수정 자동 반영
+### 신규 파일
+
+- `src/main/description-generator.ts` — Claude Haiku API로 README → 한국어 일반인 설명 자동 생성. `~/.mcp-store/generated-descriptions.json`에 캐싱. API Key 없으면 오류 반환.
+- `src/main/config-watcher.ts` — `fs.watch`로 6개 클라이언트 설정 파일 감시. 외부 MCP 추가/제거 감지 시 `installed.json` 자동 동기화 + `CONFIG_CHANGED` IPC push. 300ms 디바운스 적용.
+
+### 변경 파일
+
+**공유 타입**
+- `src/shared/types.ts` — Phase 5 IPC 상수 8개 추가 (`SETTINGS_GET/SET`, `METADATA_REFRESH`, `METADATA_CACHE_GET`, `DESCRIPTION_GENERATE`, `DESCRIPTION_CACHE_GET`, `CONFIG_CHANGED`, `NEW_MCP_DETECTED`). `AppSettings`, `MetadataCacheEntry`, `MetadataCache` 인터페이스 추가.
+
+**Electron Main Process**
+- `src/main/github-sync.ts` — **ETag/If-None-Match Conditional Request** 지원으로 GitHub API rate limit 절약 (304 → 즉시 반환). `refreshMetadataForPackages()` 추가 (설치 MCP stars/lastUpdated → `~/.mcp-store/metadata-cache.json`). `startAutoSync(win, knownIdsGetter, intervalMs?)` — 앱 시작 2초 후 1회 + 6시간 주기 자동 폴링, 신규 MCP 감지 시 `NEW_MCP_DETECTED` IPC 이벤트 push. `stopAutoSync()` 추가.
+- `src/main/ipc-handlers.ts` — `SETTINGS_GET/SET` 핸들러 (`~/.mcp-store/settings.json`). `METADATA_REFRESH/METADATA_CACHE_GET` 핸들러.
+- `src/main/ipc-handlers-community.ts` — `DESCRIPTION_GENERATE` 핸들러 (README fetch → generateDescription 호출). `DESCRIPTION_CACHE_GET` 핸들러.
+- `src/main/index.ts` — `startAutoSync`, `startConfigWatcher` 초기화. `autoSyncEnabled` 설정 확인 후 조건부 시작. `window-all-closed` 시 `stopAutoSync/stopConfigWatcher` 정리.
+- `src/main/preload.ts` — Phase 5 IPC 채널 노출: `getSettings`, `setSettings`, `refreshMetadata`, `getMetadataCache`, `generateDescription`, `getDescriptionCache`, `onConfigChanged/offConfigChanged`, `onNewMcpDetected/offNewMcpDetected`.
+
+**React Renderer**
+- `src/renderer/pages/Settings.tsx` — **Claude API Key 섹션** (마스킹/표시 토글, `~/.mcp-store/settings.json` 저장). **Auto Sync 토글** (6h 주기 활성화/비활성화). **설치 MCP 메타데이터 갱신** 버튼. 데이터 저장 경로 안내에 Phase 5 파일 추가. 버전 표시 v0.5.0.
+- `src/renderer/global.d.ts` — Phase 5 메서드 타입 선언 추가.
+
+### Phase 5 기능 구현 현황
+
+- [x] GitHub API ETag Conditional Requests — 304 Not Modified 처리, rate limit 절약
+- [x] 앱 시작 1회 + 6시간 주기 Auto Sync — `startAutoSync`
+- [x] 신규 MCP 감지 → `NEW_MCP_DETECTED` IPC 이벤트 push
+- [x] 설치 MCP stars/lastUpdated 주기적 갱신 → `metadata-cache.json`
+- [x] `description-generator.ts` — Claude Haiku로 README → 한국어 설명 자동 생성
+- [x] 생성 설명 `generated-descriptions.json` 캐싱
+- [x] `config-watcher.ts` — fs.watch + 디바운스 300ms, `CONFIG_CHANGED` IPC push
+- [x] 외부 MCP 추가/제거 → `installed.json` 자동 동기화
+- [x] Settings 탭 — API Key 입력(마스킹), Auto Sync 토글, 설정 저장
+- [x] README.md fix — URL 수정(aeolus9093/MCP_STORE), 깨진 이미지 제거
+
+### 데이터 파일 (Phase 5 신규)
+
+```
+~/.mcp-store/settings.json              — { claudeApiKey, autoSyncEnabled }
+~/.mcp-store/generated-descriptions.json — { [packageId]: { description, generatedAt } }
+~/.mcp-store/metadata-cache.json         — { [packageId]: { stars, lastUpdated, fetchedAt } }
+~/.mcp-store/sync-cache.json             — (기존 + etag 필드 추가)
+```
+
+---
+
+## Phase 6 — 미정
