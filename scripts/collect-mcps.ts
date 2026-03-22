@@ -24,7 +24,8 @@ import { MCPPackage } from "../src/shared/types";
 const GITHUB_TOKEN       = process.env.GITHUB_TOKEN ?? "";
 const ANTHROPIC_API_KEY  = process.env.ANTHROPIC_API_KEY ?? "";
 const GENERATE_DESC      = process.env.GENERATE_DESCRIPTIONS === "true";
-const REGISTRY_PATH      = path.resolve(__dirname, "../packages/registry.json");
+// __dirname = dist-scripts/scripts/ → ../../ = project root
+const REGISTRY_PATH      = path.resolve(__dirname, "../../packages/registry.json");
 
 // ──────────────────────────────────────────────
 // 로깅 유틸
