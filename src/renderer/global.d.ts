@@ -19,6 +19,8 @@ import {
 } from "../shared/types";
 
 declare global {
+  const __APP_VERSION__: string;
+
   interface Window {
     mcpStore: undefined | {
       // Registry
@@ -106,6 +108,10 @@ declare global {
       // 신규 MCP 감지 이벤트
       onNewMcpDetected:  (cb: (payload: { newPackageNames: string[]; totalInRepo: number; lastSyncedAt: string }) => void) => void;
       offNewMcpDetected: () => void;
+
+      // ── Phase 5 — Registry 자동 업데이트 ──────
+      onRegistryUpdated:  (cb: () => void) => void;
+      offRegistryUpdated: () => void;
     };
   }
 }

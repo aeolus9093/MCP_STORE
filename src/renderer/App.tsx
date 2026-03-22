@@ -19,8 +19,23 @@ export default function App() {
   const [selectedPackage, setSelectedPackage] = useState<MCPPackage | null>(null);
   const [missingTools,    setMissingTools]    = useState<string[]>([]);
   const [depsChecked,     setDepsChecked]     = useState(false);
+  const [registryToast,   setRegistryToast]   = useState(false);
 
-  const { setToolsAvailable, setInstalled } = useAppStore();
+  const { setToolsAvailable, setInstalled, setPackages } = useAppStore();
+
+  // Registry 자동 업데이트 이벤트 수신
+  useEffect(() => {
+    if (!window.mcpStore) return;
+    window.mcpStore.onRegistryUpdated(async () => {
+      const result = await window.mcpStore!.getAll();
+      if (result.success && result.data) {
+        setPackages(result.data);
+        setRegistryToast(true);
+        setTimeout(() => setRegistryToast(false), 5000);
+      }
+    });
+    return () => { window.mcpStore?.offRegistryUpdated(); };
+  }, [setPackages]);
 
   // 앱 시작 시 의존성 + 설치 목록 초기화
   useEffect(() => {
@@ -94,7 +109,7 @@ export default function App() {
         </nav>
 
         <div className="p-4 text-xs" style={{ color: "#374151", borderTop: "1px solid #1f2535" }}>
-          v0.4.0
+          v{__APP_VERSION__}
         </div>
       </aside>
 
@@ -102,6 +117,16 @@ export default function App() {
       <main className="flex-1 overflow-y-auto flex flex-col">
         {/* 업데이트 알림 배너 */}
         <UpdateNotification />
+        {/* Registry 자동 업데이트 토스트 */}
+        {registryToast && (
+          <div
+            className="flex items-center justify-between px-4 py-2 text-sm"
+            style={{ background: "#0f3460", color: "#93c5fd", borderBottom: "1px solid #1e3a5f" }}
+          >
+            <span>✨ MCP 목록이 최신 버전으로 업데이트됐습니다</span>
+            <button onClick={() => setRegistryToast(false)} style={{ color: "#64748b" }}>✕</button>
+          </div>
+        )}
         <div className="flex-1 overflow-y-auto">
           {selectedPackage ? (
             <Detail pkg={selectedPackage} onBack={handleBack} />

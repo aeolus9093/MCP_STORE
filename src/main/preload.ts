@@ -120,4 +120,13 @@ contextBridge.exposeInMainWorld("mcpStore", {
   offNewMcpDetected: () => {
     ipcRenderer.removeAllListeners(IPC.NEW_MCP_DETECTED);
   },
+
+  // ── Phase 5 — Registry 자동 업데이트 ─────────
+  // GitHub에서 최신 registry.json fetch 완료 시 이벤트
+  onRegistryUpdated: (cb: () => void) => {
+    ipcRenderer.on(IPC.REGISTRY_UPDATED, () => cb());
+  },
+  offRegistryUpdated: () => {
+    ipcRenderer.removeAllListeners(IPC.REGISTRY_UPDATED);
+  },
 });
