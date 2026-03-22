@@ -26,14 +26,14 @@ jobs:
 
       - name: Build & Package (Windows)
         run: npm run build:win
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: release-win
-          path: release/*.exe
+          path: |
+            release/*.exe
+            release/latest.yml
 
   build-mac:
     name: Build / macOS
@@ -52,8 +52,6 @@ jobs:
 
       - name: Build & Package (macOS)
         run: npm run build:mac
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -62,6 +60,7 @@ jobs:
           path: |
             release/*.dmg
             release/*.pkg
+            release/latest-mac.yml
 
   build-linux:
     name: Build / Linux
@@ -85,8 +84,6 @@ jobs:
 
       - name: Build & Package (Linux)
         run: npm run build:linux
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -95,6 +92,7 @@ jobs:
           path: |
             release/*.AppImage
             release/*.deb
+            release/latest-linux.yml
 
   release:
     name: Create GitHub Release
