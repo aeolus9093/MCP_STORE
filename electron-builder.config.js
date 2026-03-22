@@ -15,12 +15,9 @@ const config = {
     "package.json"
   ],
 
-  publish: {
-    provider: "github",
-    releaseType: "release",
-    owner: "aeolus9093",
-    repo: "MCP_STORE",
-  },
+  // publish는 softprops/action-gh-release@v2 워크플로우가 처리
+  // electron-builder가 GH_TOKEN 없이 자동 publish 시도하는 것을 방지
+  publish: null,
 
   win: {
     target: [
