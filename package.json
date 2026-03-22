@@ -2,7 +2,7 @@
   "name": "mcp-store",
   "version": "0.5.6",
   "description": "One-click MCP installer for AI clients",
-  "main": "dist/main/main/index.js",
+  "main": "dist/main/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/aeolus9093/MCP_STORE.git"
@@ -14,10 +14,10 @@
     "build": "npm run build:vite && npm run build:main",
     "build:vite": "vite build",
     "build:main": "tsc -p tsconfig.main.json",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "npm run build && electron-builder --mac",
-    "build:linux": "npm run build && electron-builder --linux",
-    "build:all": "npm run build && electron-builder --win --mac --linux",
+    "build:win": "npm run build && electron-builder --win --config electron-builder.config.js",
+    "build:mac": "npm run build && electron-builder --mac --config electron-builder.config.js",
+    "build:linux": "npm run build && electron-builder --linux --config electron-builder.config.js",
+    "build:all": "npm run build && electron-builder --win --mac --linux --config electron-builder.config.js",
     "dist": "npm run build && electron-builder",
     "typecheck": "tsc --noEmit",
     "collect": "tsc -p tsconfig.scripts.json && node dist-scripts/scripts/collect-mcps.js"

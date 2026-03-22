@@ -27,7 +27,7 @@ async function createWindow(): Promise<void> {
     minHeight: 600,
     // titleBarStyle: "hiddenInset" → macOS 전용이라 Windows에서 제거
     webPreferences: {
-      // __dirname = dist/main/main/ 이므로 preload.js 경로 = dist/main/main/preload.js
+      // __dirname = dist/main/ (outDir:dist, rootDir:src)
       preload:          path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration:  false,
@@ -42,7 +42,7 @@ async function createWindow(): Promise<void> {
     mainWindow.webContents.openDevTools();
   } else {
     await mainWindow.loadFile(
-      path.join(__dirname, "../../renderer/index.html")
+      path.join(__dirname, "../renderer/index.html")
     );
   }
 

@@ -46,8 +46,8 @@ let _cache: MCPPackage[] | null = null;
  * getRegistryPath — registry.json 절대 경로 반환
  */
 function getRegistryPath(): string {
-  // rootDir: "src" → outDir: "dist/main/main" 기준 3단계 위가 프로젝트 루트
-  return path.resolve(__dirname, "../../../packages/registry.json");
+  // rootDir: "src" → outDir: "dist" → __dirname = dist/main/ → 2단계 위가 프로젝트 루트
+  return path.resolve(__dirname, "../../packages/registry.json");
 }
 
 // ──────────────────────────────────────────────
