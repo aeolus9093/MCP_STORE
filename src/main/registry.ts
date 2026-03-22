@@ -3,10 +3,22 @@
 // registry.json 로드, zod 검증, 메모리 캐시
 // =============================================================
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs    from "fs";
+import * as path  from "path";
+import * as os    from "os";
+import * as https from "https";
+import { IncomingMessage } from "http";
 import { z } from "zod";
 import { MCPPackage, MCPCategory, Client, SearchPayload, SortOption } from "../shared/types";
+
+// ──────────────────────────────────────────────
+// 원격 자동 업데이트 설정
+// ──────────────────────────────────────────────
+
+const REGISTRY_REMOTE_URL =
+  "https://raw.githubusercontent.com/aeolus9093/MCP_STORE/main/packages/registry.json";
+const REGISTRY_CACHE_PATH = path.join(os.homedir(), ".mcp-store", "registry.json");
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24시간
 
 // ──────────────────────────────────────────────
 // Zod 스키마
@@ -43,11 +55,91 @@ const MCPPackageSchema = z.object({
 let _cache: MCPPackage[] | null = null;
 
 /**
+ * isCacheFresh — 로컬 캐시가 TTL 이내인지 확인
+ */
+function isCacheFresh(): boolean {
+  try {
+    const stat = fs.statSync(REGISTRY_CACHE_PATH);
+    return Date.now() - stat.mtimeMs < CACHE_TTL_MS;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * getRegistryPath — registry.json 절대 경로 반환
+ * 우선순위: 로컬 캐시 (~/.mcp-store/registry.json) > 번들 파일
  */
 function getRegistryPath(): string {
-  // rootDir: "src" → outDir: "dist" → __dirname = dist/main/ → 2단계 위가 프로젝트 루트
+  if (fs.existsSync(REGISTRY_CACHE_PATH)) {
+    return REGISTRY_CACHE_PATH;
+  }
+  // 번들된 기본 파일 (설치 시 포함)
   return path.resolve(__dirname, "../../packages/registry.json");
+}
+
+/**
+ * fetchAndUpdateRegistry — GitHub에서 최신 registry.json을 백그라운드로 fetch
+ * - 캐시가 신선하면 생략
+ * - 성공 시 로컬 캐시 갱신 + 메모리 캐시 초기화
+ * - 반환값: true = 업데이트됨, false = 생략/실패
+ */
+export async function fetchAndUpdateRegistry(): Promise<boolean> {
+  if (isCacheFresh()) {
+    console.log("[registry] 캐시 최신 상태, fetch 생략");
+    return false;
+  }
+
+  return new Promise((resolve) => {
+    console.log("[registry] 원격 registry.json fetch 시작...");
+
+    const req = https.get(REGISTRY_REMOTE_URL, (res) => {
+      // 리다이렉트 처리
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        const location = res.headers.location;
+        if (!location) { resolve(false); return; }
+        https.get(location, handleResponse).on("error", () => resolve(false));
+        res.resume();
+        return;
+      }
+      handleResponse(res);
+    });
+
+    req.on("error", (err) => {
+      console.warn("[registry] 연결 오류:", err.message);
+      resolve(false);
+    });
+
+    function handleResponse(res: IncomingMessage): void {
+      if (res.statusCode !== 200) {
+        console.warn(`[registry] fetch 실패: HTTP ${res.statusCode}`);
+        res.resume();
+        resolve(false);
+        return;
+      }
+
+      const chunks: Buffer[] = [];
+      res.on("data", (chunk: Buffer) => chunks.push(chunk));
+      res.on("end", () => {
+        try {
+          const data = Buffer.concat(chunks).toString("utf-8");
+          JSON.parse(data); // 유효성 검증
+
+          const cacheDir = path.dirname(REGISTRY_CACHE_PATH);
+          if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir, { recursive: true });
+          fs.writeFileSync(REGISTRY_CACHE_PATH, data, "utf-8");
+
+          _cache = null; // 메모리 캐시 초기화
+          console.log("[registry] 원격 registry.json 업데이트 완료");
+          resolve(true);
+        } catch (err) {
+          console.warn("[registry] 데이터 처리 실패:", err);
+          resolve(false);
+        }
+      });
+      res.on("error", () => resolve(false));
+    }
+  });
 }
 
 // ──────────────────────────────────────────────

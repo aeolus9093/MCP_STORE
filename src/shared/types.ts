@@ -198,6 +198,9 @@ export const IPC = {
   // ── Phase 5 — Registry Collect ────────────
   REGISTRY_COLLECT:         "registry:collect",
   REGISTRY_COLLECT_STATUS:  "registry:collectStatus",  // main → renderer (event)
+
+  // ── Phase 5 — Registry Auto-Update ────────
+  REGISTRY_UPDATED:         "registry:updated",        // main → renderer (event)
 } as const;
 
 // ──────────────────────────────────────────────

@@ -1,6 +1,6 @@
 {
   "name": "mcp-store",
-  "version": "0.5.9",
+  "version": "0.6.0",
   "description": "One-click MCP installer for AI clients",
   "main": "dist/main/index.js",
   "repository": {
