@@ -7,7 +7,13 @@
 
 ## 스크린샷
 
-> 📸 스크린샷은 첫 릴리즈 이후 추가될 예정입니다.
+<img width="1687" height="1099" alt="image" src="https://github.com/user-attachments/assets/930d5653-ce16-49e7-87b9-e4388bca4fa0" />
+
+<img width="1381" height="1239" alt="image" src="https://github.com/user-attachments/assets/726125fe-45e2-4898-a67b-470e6194090a" />
+
+<img width="1692" height="543" alt="image" src="https://github.com/user-attachments/assets/3f8e0634-c2d1-4a88-879f-23df3782ad7c" />
+
+<img width="1688" height="1274" alt="image" src="https://github.com/user-attachments/assets/ccb6e6da-4b8e-414f-8c56-ca6c06908c96" />
 
 ---
 
