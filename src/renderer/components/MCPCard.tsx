@@ -108,7 +108,7 @@ export default function MCPCard({ pkg, isInstalled, onClick }: MCPCardProps) {
 
       {/* 설명 */}
       <p className="text-sm line-clamp-2 leading-relaxed" style={{ color: "#64748b" }}>
-        {pkg.plainDescription}
+        {pkg.plainDescription || pkg.description}
       </p>
 
       {/* 클라이언트 뱃지 */}
