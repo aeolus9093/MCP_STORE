@@ -2,7 +2,7 @@ name: Collect MCPs
 
 on:
   schedule:
-    - cron: '0 2 * * 0'  # 매주 일요일 새벽 2시 (UTC)
+    - cron: '0 2 * * 0'  # 매주 일요일 새벽 2시 (UTC) — GitHub 서버에서 실행됨
   workflow_dispatch:
     inputs:
       generate_descriptions:
@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write   # 비용 초과 알림용 Issue 생성 권한
 
     steps:
       - name: Checkout
@@ -34,13 +35,65 @@ jobs:
           GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY:       ${{ secrets.ANTHROPIC_API_KEY }}
           GENERATE_DESCRIPTIONS:   ${{ github.event.inputs.generate_descriptions }}
+          COST_LIMIT_USD:          "0.01"
         run: npm run collect
+
+      - name: Check cost limit and create alert issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          STATUS_FILE="cost-limit-status.json"
+          if [ -f "$STATUS_FILE" ]; then
+            REACHED=$(node -e "const d=require('./$STATUS_FILE'); console.log(d.costLimitReached)")
+            if [ "$REACHED" = "true" ]; then
+              TOTAL_COST=$(node -e "const d=require('./$STATUS_FILE'); console.log(d.totalCost.toFixed(6))")
+              LIMIT=$(node -e "const d=require('./$STATUS_FILE'); console.log(d.costLimitUSD)")
+              TRANSLATED=$(node -e "const d=require('./$STATUS_FILE'); console.log(d.translatedCount)")
+              TIMESTAMP=$(node -e "const d=require('./$STATUS_FILE'); console.log(d.timestamp)")
+
+              echo "::warning::번역 비용 한도 초과: \$${TOTAL_COST} / \$${LIMIT}"
+
+              gh issue create \
+                --title "⚠️ MCP 번역 비용 한도 초과 (${TIMESTAMP})" \
+                --body "## 번역 비용 한도 초과 알림
+
+**실행 시각**: ${TIMESTAMP}
+**누적 비용**: \$${TOTAL_COST}
+**설정 한도**: \$${LIMIT}
+**번역 완료**: ${TRANSLATED}개
+
+### 조치 필요
+- 한도를 올리려면 \`.github/workflows/collect-mcps.yml\`의 \`COST_LIMIT_USD\` 값을 수정하세요.
+- 현재는 한도 초과로 인해 일부 MCP의 한국어 설명이 생성되지 않았습니다.
+- 수동으로 실행하려면 Actions 탭에서 \`workflow_dispatch\`를 사용하세요.
+
+> 이 Issue는 GitHub Actions에서 자동 생성되었습니다." \
+                --label "cost-alert" 2>/dev/null || \
+              gh issue create \
+                --title "⚠️ MCP 번역 비용 한도 초과 (${TIMESTAMP})" \
+                --body "## 번역 비용 한도 초과 알림
+
+**실행 시각**: ${TIMESTAMP}
+**누적 비용**: \$${TOTAL_COST}
+**설정 한도**: \$${LIMIT}
+**번역 완료**: ${TRANSLATED}개
+
+한도 초과로 인해 일부 MCP 한국어 설명이 생성되지 않았습니다.
+\`.github/workflows/collect-mcps.yml\`의 \`COST_LIMIT_USD\` 값을 수정하여 한도를 조정하세요.
+
+> 이 Issue는 GitHub Actions에서 자동 생성되었습니다."
+            else
+              echo "비용 한도 정상 범위 내"
+            fi
+          fi
 
       - name: Commit and push if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add packages/registry.json
+          # cost-limit-status.json은 커밋하지 않음 (임시 파일)
           if git diff --staged --quiet; then
             echo "변경사항 없음 — 커밋 건너뜀"
           else
