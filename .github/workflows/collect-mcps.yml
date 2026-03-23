@@ -9,6 +9,10 @@ on:
         description: 'Claude API로 설명 자동 생성'
         type: boolean
         default: false
+      cost_limit_usd:
+        description: '번역 비용 한도 (USD) — 기본 0.01, 전체 번역 시 0.50 권장'
+        type: string
+        default: '0.01'
 
 jobs:
   collect:
@@ -35,7 +39,7 @@ jobs:
           GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY:       ${{ secrets.ANTHROPIC_API_KEY }}
           GENERATE_DESCRIPTIONS:   ${{ github.event.inputs.generate_descriptions }}
-          COST_LIMIT_USD:          "0.01"
+          COST_LIMIT_USD:          ${{ github.event.inputs.cost_limit_usd || '0.01' }}
         run: npm run collect
 
       - name: Check cost limit and create alert issue

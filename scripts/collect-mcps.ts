@@ -108,7 +108,7 @@ async function generatePlainDescription(pkg: MCPPackage): Promise<GenerateResult
     `전문 용어는 쉬운 말로 바꾸고, 실제로 어떤 상황에서 유용한지 포함하세요.`;
 
   const body = JSON.stringify({
-    model:      "claude-haiku-4-5-20251001",
+    model:      "claude-3-haiku-20240307",
     max_tokens: 300,
     messages:   [{ role: "user", content: prompt }],
   });
@@ -131,9 +131,16 @@ async function generatePlainDescription(pkg: MCPPackage): Promise<GenerateResult
       res.on("end", () => {
         try {
           const parsed = JSON.parse(data) as {
-            content: Array<{ type: string; text: string }>;
-            usage:   ClaudeUsage;
+            type?:    string;
+            error?:   { type: string; message: string };
+            content:  Array<{ type: string; text: string }>;
+            usage:    ClaudeUsage;
           };
+          // API 에러 응답 감지 (인증 실패, 모델 없음 등)
+          if (parsed.type === "error" || parsed.error) {
+            reject(new Error(`Claude API 오류: ${parsed.error?.type} — ${parsed.error?.message}`));
+            return;
+          }
           const text         = parsed.content?.find((c) => c.type === "text")?.text ?? "";
           const inputTokens  = parsed.usage?.input_tokens  ?? 0;
           const outputTokens = parsed.usage?.output_tokens ?? 0;
